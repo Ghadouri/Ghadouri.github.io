@@ -31,6 +31,14 @@
         .main-container:hover {
             transform: translateY(0);
         }
+        .header {
+            font-family: 'Traditional Arabic', serif;
+            font-size: 36px;
+            color: #0056b3;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+        }
         h1 {
             font-size: 28px;
             color: #007bff;
@@ -62,9 +70,12 @@
 </head>
 <body>
     <div class="main-container">
+        <div class="header">
+            ريمباك
+        </div>
         <h1>اختر الدورة</h1>
         <button onclick="window.location.href='bac-normal.html'">بكالوريا الدورة العادية</button>
-        <!-- يمكنك إضافة خيارات أخرى هنا إذا لزم الأمر -->
+        <button onclick="window.location.href='bac-complementaire.html'">بكالوريا الدورة التكميلية</button>
     </div>
 </body>
 </html>
