@@ -113,7 +113,7 @@
         .success {
             color: green;
         }
-        .red {
+        .failure {
             color: red;
         }
         .yellow {
@@ -121,6 +121,9 @@
             background-color: #ffeb3b; /* Light yellow background */
             padding: 5px;
             border-radius: 4px;
+        }
+        .red {
+            color: red;
         }
     </style>
 </head>
@@ -185,9 +188,9 @@
                     if (moyValue < 8) {
                         document.getElementById('message').innerText = 'راسب';
                         document.getElementById('message').className = 'message red';
-                    } else if (moyValue >= 8 && moyValue < 10) {
-                        document.getElementById('message').innerText = 'راسب';
-                        document.getElementById('message').className = 'message red';
+                    } else if (moyValue >= 8 && moyValue <= 9.999999) {
+                        document.getElementById('message').innerText = 'الدورة التكميلية';
+                        document.getElementById('message').className = 'message yellow';
                     } else if (moyValue >= 10) {
                         document.getElementById('message').innerText = 'مبروك';
                         document.getElementById('message').className = 'message success';
