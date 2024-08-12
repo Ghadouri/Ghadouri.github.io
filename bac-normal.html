@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نتائج رقم الباك</title>
+    <title>نتائج الباك</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f0f4f8;
+            background-color: #f8f9fa;
             color: #333;
             margin: 0;
             padding: 0;
@@ -16,62 +16,53 @@
             min-height: 100vh;
             direction: rtl;
         }
-        header, footer {
+        header {
             background-color: #0056b3;
             color: #fff;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
-            font-size: 30px;
+            font-size: 24px;
             font-weight: bold;
-            text-transform: uppercase;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             width: 100%;
-        }
-        header {
             position: fixed;
             top: 0;
             left: 0;
             z-index: 1000;
         }
-        footer {
-            font-size: 16px;
-            padding: 15px;
-            position: relative;
-            margin-top: auto;
-        }
         .container {
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            padding: 30px;
-            margin: 100px auto 30px; /* Adjusted top margin to accommodate fixed header */
-            max-width: 600px;
-            width: 90%;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 80px auto 30px;
+            max-width: 90%;
+            width: 100%;
             box-sizing: border-box;
         }
         h1 {
-            font-size: 28px;
+            font-size: 24px;
             color: #0056b3;
             margin-bottom: 20px;
             text-align: center;
             font-weight: bold;
         }
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         label {
             display: block;
             margin-bottom: 10px;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
         }
         input[type="number"] {
             width: 100%;
             padding: 12px;
-            border: 2px solid #ddd;
+            border: 1px solid #ddd;
             border-radius: 8px;
             box-sizing: border-box;
-            font-size: 18px;
+            font-size: 16px;
             transition: border-color 0.3s;
         }
         input[type="number"]:focus {
@@ -81,7 +72,7 @@
         button {
             display: block;
             width: 100%;
-            padding: 15px;
+            padding: 14px;
             border: none;
             border-radius: 8px;
             background-color: #0056b3;
@@ -97,76 +88,54 @@
             transform: scale(0.98);
         }
         .result {
-            margin-top: 30px;
+            margin-top: 20px;
             padding: 15px;
-            border-top: 2px solid #ddd;
+            border-top: 1px solid #ddd;
             background-color: #f9f9f9;
             border-radius: 8px;
         }
         .result p {
             margin: 10px 0;
-            font-size: 18px;
+            font-size: 16px;
         }
 
-        /* تحسينات للشاشات الصغيرة */
         @media screen and (max-width: 600px) {
-            header, footer {
-                font-size: 24px; /* تقليل حجم الخط في الشاشات الصغيرة */
-                padding: 15px;
-            }
-            h1 {
-                font-size: 24px;
-            }
-            label, input[type="number"], button {
-                font-size: 16px;
-            }
-            .container {
-                margin: 80px auto 20px;
-                padding: 20px;
-            }
-            .form-group {
-                margin-bottom: 20px;
-            }
-            button {
+            header {
+                font-size: 20px;
                 padding: 12px;
             }
-            .result {
-                margin-top: 20px;
-                padding: 10px;
-            }
-        }
-
-        /* تحسينات للشاشات الأصغر */
-        @media screen and (max-width: 400px) {
             h1 {
                 font-size: 20px;
             }
-            input[type="number"], button {
+            label, input[type="number"], button {
                 font-size: 14px;
-                padding: 10px;
+            }
+            .container {
+                margin: 70px auto 20px;
+                padding: 15px;
+            }
+            .result p {
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        ريمباك
+        نتائج الباك
     </header>
     <div class="container">
-        <h1>نتائج رقم الباك</h1>
+        <h1>تحقق من نتيجتك</h1>
         <div class="form-group">
             <label for="bacNumber">أدخل رقم الباك:</label>
-            <input type="number" id="bacNumber" placeholder="مثال، 06245">
+            <input type="number" id="bacNumber" placeholder="مثال: 06245">
         </div>
         <button onclick="getResult()">الحصول على النتيجة</button>
-        <div class="result">
-            <p id="moyenne">المعدل: </p>
-            <p id="decision">القرار: </p>
+        <div class="result" id="resultContainer">
+            <p id="moyenne">المعدل: -</p>
+            <p id="decision">القرار: -</p>
         </div>
     </div>
-    <footer>
-        صنع بواسطة قدوري
-    </footer>
 
     <script>
         // رابط مباشر للملف JSON على GitHub Pages
@@ -177,13 +146,13 @@
             try {
                 const response = await fetch(jsonUrl);
                 if (!response.ok) {
-                    throw new Error('استجابة الشبكة لم تكن جيدة');
+                    throw new Error('تعذر الاتصال بالشبكة');
                 }
                 const data = await response.json();
-                console.log('البيانات التي تم جلبها:', data); // تصحيح
+                console.log('البيانات التي تم جلبها:', data);
                 return data;
             } catch (error) {
-                console.error('خطأ في جلب JSON:', error);
+                console.error('خطأ في جلب بيانات JSON:', error);
                 return [];
             }
         }
@@ -192,19 +161,15 @@
         async function getResult() {
             try {
                 const data = await fetchJSON();
-                console.log('البيانات في getResult:', data); // تصحيح
-
                 const bacNumber = document.getElementById('bacNumber').value.trim();
-                console.log('رقم الباك المدخل:', bacNumber);
 
                 if (!bacNumber) {
-                    document.getElementById('moyenne').innerText = 'المعدل: إدخال غير صالح';
-                    document.getElementById('decision').innerText = 'القرار: إدخال غير صالح';
+                    document.getElementById('moyenne').innerText = 'المعدل: يرجى إدخال رقم الباك';
+                    document.getElementById('decision').innerText = 'القرار: غير صالح';
                     return;
                 }
 
                 const record = data.find(item => item.Num_Bac === bacNumber);
-                console.log('السجل المطابق:', record); // تصحيح
 
                 if (record) {
                     document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
