@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نتائج باك</title>
+    <title>Bac Number Results</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -14,7 +14,6 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            direction: rtl; /* Right-to-left text direction */
         }
         header, footer {
             background-color: #007bff;
@@ -94,42 +93,26 @@
             margin: 8px 0;
             font-size: 16px;
         }
-        .moyenne {
-            font-size: 22px;
-            font-weight: bold;
-            color: #333;
-            padding: 10px;
-            background-color: #e7f0ff;
-            border-radius: 4px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .message {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 20px;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
     <header>
-        ريمباك
+        Rimbac
     </header>
     <div class="container">
-        <h1>نتائج باك</h1>
+        <h1>Bac Number Results</h1>
         <div class="form-group">
-            <label for="bacNumber">أدخل رقم الباك:</label>
-            <input type="number" id="bacNumber" placeholder="مثال: 06245">
+            <label for="bacNumber">Enter Bac Number:</label>
+            <input type="number" id="bacNumber" placeholder="e.g., 06245">
         </div>
-        <button onclick="getResult()">احصل على النتيجة</button>
+        <button onclick="getResult()">Get Result</button>
         <div class="result">
-            <p id="moyenne" class="moyenne">المعدل: </p>
-            <p id="message" class="message"></p>
+            <p id="moyenne">Moyenne: </p>
+            <p id="decision">Decision: </p>
         </div>
     </div>
     <footer>
-        صنع بواسطة قدوري
+        Made by Ghadouri
     </footer>
 
     <script>
@@ -158,13 +141,26 @@
                 const bacNumber = document.getElementById('bacNumber').value;
                 
                 if (!bacNumber) {
-                    document.getElementById('moyenne').innerText = 'المعدل: مدخل غير صالح';
-                    document.getElementById('message').innerText = '';
+                    document.getElementById('moyenne').innerText = 'Moyenne: Invalid input';
+                    document.getElementById('decision').innerText = 'Decision: Invalid input';
                     return;
                 }
                 
                 const record = data.find(item => item.Num_Bac === bacNumber);
                 
                 if (record) {
-                    const moyValue = parseFloat(record.Moy_Bac.replace(',', '.'));
-                    document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Ba
+                    document.getElementById('moyenne').innerText = 'Moyenne: ' + record.Moy_Bac;
+                    document.getElementById('decision').innerText = 'Decision: ' + record.Decision;
+                } else {
+                    document.getElementById('moyenne').innerText = 'Moyenne: Not found';
+                    document.getElementById('decision').innerText = 'Decision: Not found';
+                }
+            } catch (error) {
+                console.error('Error processing data:', error);
+                document.getElementById('moyenne').innerText = 'Moyenne: Error';
+                document.getElementById('decision').innerText = 'Decision: Error';
+            }
+        }
+    </script>
+</body>
+</html>
