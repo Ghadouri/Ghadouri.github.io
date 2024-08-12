@@ -107,6 +107,45 @@
             margin: 10px 0;
             font-size: 18px;
         }
+
+        /* تحسينات للشاشات الصغيرة */
+        @media screen and (max-width: 600px) {
+            header, footer {
+                font-size: 24px; /* تقليل حجم الخط في الشاشات الصغيرة */
+                padding: 15px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            label, input[type="number"], button {
+                font-size: 16px;
+            }
+            .container {
+                margin: 80px auto 20px;
+                padding: 20px;
+            }
+            .form-group {
+                margin-bottom: 20px;
+            }
+            button {
+                padding: 12px;
+            }
+            .result {
+                margin-top: 20px;
+                padding: 10px;
+            }
+        }
+
+        /* تحسينات للشاشات الأصغر */
+        @media screen and (max-width: 400px) {
+            h1 {
+                font-size: 20px;
+            }
+            input[type="number"], button {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
     </style>
 </head>
 <body>
