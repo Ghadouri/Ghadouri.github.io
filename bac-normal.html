@@ -107,7 +107,12 @@
         .result p.decision-sessionaire {
             color: orange;
         }
-
+        .result img {
+            margin-top: 15px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
         footer {
             background-color: #0056b3;
             color: #fff;
@@ -118,7 +123,6 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             margin-top: auto;
         }
-
         @media screen and (max-width: 600px) {
             header {
                 font-size: 20px;
@@ -158,6 +162,7 @@
         <div class="result" id="resultContainer">
             <p id="moyenne">المعدل: -</p>
             <p id="decision">القرار: -</p>
+            <img id="resultImage" src="" alt="نتيجة" style="display:none;">
         </div>
     </div>
     <footer>
@@ -192,37 +197,48 @@
                 if (!bacNumber) {
                     document.getElementById('moyenne').innerText = 'المعدل: يرجى إدخال رقم الباك';
                     document.getElementById('decision').innerText = 'القرار: غير صالح';
+                    document.getElementById('resultImage').style.display = 'none';
                     return;
                 }
 
                 const record = data.find(item => item.Num_Bac === bacNumber);
 
                 const decisionElement = document.getElementById('decision');
+                const resultImage = document.getElementById('resultImage');
 
                 if (record) {
                     document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
                     decisionElement.innerText = 'القرار: ' + record.Decision;
 
-                    // تعيين لون النص بناءً على قيمة القرار
+                    // تعيين لون النص وعرض الصورة بناءً على قيمة القرار
                     if (record.Decision === 'Ajourné') {
                         decisionElement.className = 'decision-ajourne';
-                    } else if (record.Decision === 'admis') {
+                        resultImage.src = 'C2.jpg';
+                        resultImage.style.display = 'block';
+                    } else if (record.Decision === 'admis' || record.Decision === 'delibrable') {
                         decisionElement.className = 'decision-admis';
+                        resultImage.src = 'C1.jpg';
+                        resultImage.style.display = 'block';
                     } else if (record.Decision === 'sessionaire') {
                         decisionElement.className = 'decision-sessionaire';
+                        resultImage.src = 'C3.jpg';
+                        resultImage.style.display = 'block';
                     } else {
-                        decisionElement.className = ''; // إذا كان القرار غير معروف
+                        decisionElement.className = '';
+                        resultImage.style.display = 'none'; // إخفاء الصورة إذا كان القرار غير معروف
                     }
                 } else {
                     document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
                     decisionElement.innerText = 'القرار: غير موجود';
-                    decisionElement.className = ''; // إعادة ضبط اللون
+                    decisionElement.className = '';
+                    resultImage.style.display = 'none'; // إخفاء الصورة في حالة عدم وجود نتيجة
                 }
             } catch (error) {
                 console.error('خطأ في معالجة البيانات:', error);
                 document.getElementById('moyenne').innerText = 'المعدل: خطأ';
                 document.getElementById('decision').innerText = 'القرار: خطأ';
-                document.getElementById('decision').className = ''; // إعادة ضبط اللون
+                document.getElementById('decision').className = '';
+                document.getElementById('resultImage').style.display = 'none'; // إخفاء الصورة في حالة حدوث خطأ
             }
         }
     </script>
