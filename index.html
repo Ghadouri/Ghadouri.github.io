@@ -117,53 +117,54 @@
     </footer>
 
     <script>
-        // Your JSON data
-        const jsonData = [
-            {
-                "Num_Bac": "36999",
-                "Moy_Bac": "6,375",
-                "Decision": "Ajourné Sn"
-            },
-            {
-                "Num_Bac": "35733",
-                "Moy_Bac": "8,774193548",
-                "Decision": "Sessionnaire"
-            },
-            {
-                "Num_Bac": "35071",
-                "Moy_Bac": "7,201612903",
-                "Decision": "Ajourné Sn"
-            },
-            {
-                "Num_Bac": "35027",
-                "Moy_Bac": "8,462365591",
-                "Decision": "Sessionnaire"
-            },
-            {
-                "Num_Bac": "06245",
-                "Moy_Bac": "10,4765625",
-                "Decision": "Admis Sn"
-            }
-        ];
+        // رابط مباشر للملف JSON على GitHub
+        const jsonUrl = 'https://github.com/username/repository/raw/main/tableConvert.com_u32tuc.json';
 
-        // Function to get result based on Bac number
-        function getResult() {
-            const bacNumber = document.getElementById('bacNumber').value;
-            
-            if (!bacNumber) {
-                document.getElementById('moyenne').innerText = 'المعدل: إدخال غير صالح';
-                document.getElementById('decision').innerText = 'القرار: إدخال غير صالح';
-                return;
+        // تحميل بيانات JSON من الرابط
+        async function fetchJSON() {
+            try {
+                const response = await fetch(jsonUrl);
+                if (!response.ok) {
+                    throw new Error('استجابة الشبكة لم تكن جيدة');
+                }
+                const data = await response.json();
+                console.log('البيانات التي تم جلبها:', data); // تصحيح
+                return data;
+            } catch (error) {
+                console.error('خطأ في جلب JSON:', error);
+                return [];
             }
-            
-            const record = jsonData.find(item => item.Num_Bac === bacNumber);
-            
-            if (record) {
-                document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
-                document.getElementById('decision').innerText = 'القرار: ' + record.Decision;
-            } else {
-                document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
-                document.getElementById('decision').innerText = 'القرار: غير موجود';
+        }
+
+        // دالة للحصول على النتيجة بناءً على رقم الباك
+        async function getResult() {
+            try {
+                const data = await fetchJSON();
+                console.log('البيانات في getResult:', data); // تصحيح
+
+                const bacNumber = document.getElementById('bacNumber').value.trim();
+                console.log('رقم الباك المدخل:', bacNumber);
+
+                if (!bacNumber) {
+                    document.getElementById('moyenne').innerText = 'المعدل: إدخال غير صالح';
+                    document.getElementById('decision').innerText = 'القرار: إدخال غير صالح';
+                    return;
+                }
+
+                const record = data.find(item => item.Num_Bac === bacNumber);
+                console.log('السجل المطابق:', record); // تصحيح
+
+                if (record) {
+                    document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
+                    document.getElementById('decision').innerText = 'القرار: ' + record.Decision;
+                } else {
+                    document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
+                    document.getElementById('decision').innerText = 'القرار: غير موجود';
+                }
+            } catch (error) {
+                console.error('خطأ في معالجة البيانات:', error);
+                document.getElementById('moyenne').innerText = 'المعدل: خطأ';
+                document.getElementById('decision').innerText = 'القرار: خطأ';
             }
         }
     </script>
