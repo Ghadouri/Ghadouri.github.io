@@ -14,7 +14,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            direction: rtl;
+            direction: rtl; /* Right-to-left text direction */
         }
         header, footer {
             background-color: #007bff;
@@ -37,14 +37,14 @@
             font-size: 14px;
             padding: 10px;
             position: relative;
-            margin-top: auto;
+            margin-top: auto; /* Ensure footer sticks to the bottom of the viewport */
         }
         .container {
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            margin: 80px auto 20px;
+            margin: 80px auto 20px; /* Adjusted top margin to accommodate fixed header */
             max-width: 500px;
             width: 100%;
         }
@@ -113,6 +113,15 @@
         .success {
             color: green;
         }
+        .failure {
+            color: red;
+        }
+        .yellow {
+            color: yellow;
+            background-color: #ffeb3b; /* Light yellow background */
+            padding: 5px;
+            border-radius: 4px;
+        }
         .red {
             color: red;
         }
@@ -131,7 +140,7 @@
         <button onclick="getResult()">احصل على النتيجة</button>
         <div class="result">
             <p id="moyenne" class="moyenne">المعدل: </p>
-            <p id="decision" class="message"></p>
+            <p id="message" class="message"></p>
         </div>
     </div>
     <footer>
@@ -159,32 +168,30 @@
         async function getResult() {
             try {
                 const data = await fetchJSON();
-                console.log('Data received:', data); // Debugging statement
+                console.log('Data in getResult:', data); // Debugging statement
 
                 const bacNumber = document.getElementById('bacNumber').value;
-                console.log('Bac Number Entered:', bacNumber); // Debugging statement
                 
                 if (!bacNumber) {
                     document.getElementById('moyenne').innerText = 'المعدل: مدخل غير صالح';
-                    document.getElementById('decision').innerText = '';
+                    document.getElementById('message').innerText = '';
                     return;
                 }
                 
-                const record = data.find(item => item["num_Bac"] === bacNumber);
-                console.log('Record Found:', record); // Debugging statement
+                const record = data.find(item => item.num_Bac === bacNumber);
                 
                 if (record) {
-                    document.getElementById('moyenne').innerText = 'المعدل: ' + record["Moy_Bac"];
-                    document.getElementById('decision').innerText = 'القرار: ' + record["Desicion"];
-                    document.getElementById('decision').className = 'message ' + (record["Desicion"] === 'admis' ? 'success' : 'red');
+                    document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
+                    document.getElementById('message').innerText = 'القرار: ' + record.Desicion;
+                    document.getElementById('message').className = 'message ' + (record.Desicion === 'admis' ? 'success' : 'red');
                 } else {
                     document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
-                    document.getElementById('decision').innerText = '';
+                    document.getElementById('message').innerText = '';
                 }
             } catch (error) {
                 console.error('Error processing data:', error);
                 document.getElementById('moyenne').innerText = 'المعدل: خطأ';
-                document.getElementById('decision').innerText = '';
+                document.getElementById('message').innerText = '';
             }
         }
     </script>
