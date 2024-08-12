@@ -110,11 +110,26 @@
             margin-top: 20px;
             text-align: center;
         }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        .yellow {
+            color: yellow;
+            background-color: #ffeb3b; /* Light yellow background */
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .red {
+            color: red;
+        }
     </style>
 </head>
 <body>
     <header>
-        نتائج باك
+        ريمباك
     </header>
     <div class="container">
         <h1>نتائج باك</h1>
@@ -153,8 +168,6 @@
         async function getResult() {
             try {
                 const data = await fetchJSON();
-                console.log('Data in getResult:', data); // Debugging statement
-
                 const bacNumber = document.getElementById('bacNumber').value;
                 
                 if (!bacNumber) {
@@ -163,11 +176,13 @@
                     return;
                 }
                 
-                const record = data.find(item => item.Num_Bac === bacNumber);
+                const record = data.find(item => item["Numéro Bac"] === bacNumber);
                 
                 if (record) {
-                    document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
-                    document.getElementById('decision').innerText = 'القرار: ' + record.Decision;
+                    const moyValue = parseFloat(record["Moyenne Bac"].replace(',', '.'));
+                    document.getElementById('moyenne').innerText = 'المعدل: ' + record["Moyenne Bac"];
+                    document.getElementById('decision').innerText = 'القرار: ' + record["Décision"];
+                    document.getElementById('decision').className = 'message ' + (record["Décision"] === 'Admis' ? 'success' : 'red');
                 } else {
                     document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
                     document.getElementById('decision').innerText = '';
