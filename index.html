@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bac Number Results</title>
+    <title>نتائج رقم الباك</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -14,6 +14,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            direction: rtl;
         }
         header, footer {
             background-color: #007bff;
@@ -97,22 +98,22 @@
 </head>
 <body>
     <header>
-        Rimbac
+        ريمباك
     </header>
     <div class="container">
-        <h1>Bac Number Results</h1>
+        <h1>نتائج رقم الباك</h1>
         <div class="form-group">
-            <label for="bacNumber">Enter Bac Number:</label>
-            <input type="number" id="bacNumber" placeholder="e.g., 06245">
+            <label for="bacNumber">أدخل رقم الباك:</label>
+            <input type="number" id="bacNumber" placeholder="مثال، 06245">
         </div>
-        <button onclick="getResult()">Get Result</button>
+        <button onclick="getResult()">الحصول على النتيجة</button>
         <div class="result">
-            <p id="moyenne">Moyenne: </p>
-            <p id="decision">Decision: </p>
+            <p id="moyenne">المعدل: </p>
+            <p id="decision">القرار: </p>
         </div>
     </div>
     <footer>
-        Made by Ghadouri
+        صنع بواسطة قدوري
     </footer>
 
     <script>
@@ -141,26 +142,19 @@
                 const bacNumber = document.getElementById('bacNumber').value;
                 
                 if (!bacNumber) {
-                    document.getElementById('moyenne').innerText = 'Moyenne: Invalid input';
-                    document.getElementById('decision').innerText = 'Decision: Invalid input';
+                    document.getElementById('moyenne').innerText = 'المعدل: إدخال غير صالح';
+                    document.getElementById('decision').innerText = 'القرار: إدخال غير صالح';
                     return;
                 }
                 
                 const record = data.find(item => item.Num_Bac === bacNumber);
                 
                 if (record) {
-                    document.getElementById('moyenne').innerText = 'Moyenne: ' + record.Moy_Bac;
-                    document.getElementById('decision').innerText = 'Decision: ' + record.Decision;
+                    document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
+                    document.getElementById('decision').innerText = 'القرار: ' + record.Decision;
                 } else {
-                    document.getElementById('moyenne').innerText = 'Moyenne: Not found';
-                    document.getElementById('decision').innerText = 'Decision: Not found';
+                    document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
+                    document.getElementById('decision').innerText = 'القرار: غير موجود';
                 }
             } catch (error) {
-                console.error('Error processing data:', error);
-                document.getElementById('moyenne').innerText = 'Moyenne: Error';
-                document.getElementById('decision').innerText = 'Decision: Error';
-            }
-        }
-    </script>
-</body>
-</html>
+                console
