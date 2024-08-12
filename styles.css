@@ -1,0 +1,15 @@
+@keyframes jump {
+    0% {
+        bottom: 20px;
+    }
+    50% {
+        bottom: 150px; /* Jump height */
+    }
+    100% {
+        bottom: 20px;
+    }
+}
+
+#boy.jump {
+    animation: jump 0.5s;
+}
