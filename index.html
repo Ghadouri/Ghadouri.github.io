@@ -181,28 +181,19 @@
                 const record = data.find(item => item.Num_Bac === bacNumber);
                 
                 if (record) {
+                    const moyValue = parseFloat(record.Moy_Bac.replace(',', '.'));
                     document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
 
-                    // Display messages based on decision
-                    if (record.Decision === "Admis Sn") {
+                    // Display messages based on decision and average
+                    if (moyValue < 8) {
+                        document.getElementById('message').innerText = 'راسب';
+                        document.getElementById('message').className = 'message red';
+                    } else if (moyValue >= 8 && moyValue < 9) {
+                        document.getElementById('message').innerText = 'الدورة التكميلية';
+                        document.getElementById('message').className = 'message yellow';
+                    } else if (moyValue >= 9) {
                         document.getElementById('message').innerText = 'مبروك';
                         document.getElementById('message').className = 'message success';
-                    } else if (record.Decision === "Sessionnaire") {
-                        document.getElementById('message').innerText = 'حظا أوفر';
-                        document.getElementById('message').className = 'message failure';
-                    }
-
-                    // Check if average is between 0 and 7.999999
-                    const moyValue = parseFloat(record.Moy_Bac.replace(',', '.'));
-                    if (moyValue >= 0 && moyValue < 8) {
-                        document.getElementById('message').innerText = 'راسب';
-                        document.getElementById('message').classList.add('red');
-                    }
-                    
-                    // Check if average is between 8 and 9
-                    if (moyValue >= 8 && moyValue < 9) {
-                        document.getElementById('message').innerText = 'الدورة التكميلية';
-                        document.getElementById('message').classList.add('yellow');
                     }
                 } else {
                     document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
