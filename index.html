@@ -181,9 +181,9 @@
                         document.getElementById('message').className = 'message failure';
                     }
 
-                    // Check if average is between 8 and 10
+                    // Check if average is between 8 and 9
                     const moyValue = parseFloat(record.Moy_Bac.replace(',', '.'));
-                    if (moyValue >= 8 && moyValue < 10) {
+                    if (moyValue >= 8 && moyValue < 9) {
                         document.getElementById('message').innerText += ' الدورة التكميلية';
                         document.getElementById('message').classList.add('yellow');
                     }
