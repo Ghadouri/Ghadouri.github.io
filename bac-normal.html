@@ -112,6 +112,7 @@
             max-width: 100%;
             height: auto;
             border-radius: 8px;
+            display: none;
         }
         footer {
             background-color: #0056b3;
@@ -162,11 +163,11 @@
         <div class="result" id="resultContainer">
             <p id="moyenne">المعدل: -</p>
             <p id="decision">القرار: -</p>
-            <img id="resultImage" src="" alt="نتيجة" style="display:none;">
+            <img id="resultImage" src="" alt="نتيجة">
         </div>
     </div>
     <footer>
-        Ghadouri
+        <span style="font-family: 'Cursive', sans-serif; font-size: 24px;">Ghadouri</span>
     </footer>
 
     <script>
@@ -213,15 +214,15 @@
                     // تعيين لون النص وعرض الصورة بناءً على قيمة القرار
                     if (record.Decision === 'Ajourné') {
                         decisionElement.className = 'decision-ajourne';
-                        resultImage.src = 'C2.jpg';
+                        resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
                         resultImage.style.display = 'block';
                     } else if (record.Decision === 'admis' || record.Decision === 'delibrable') {
                         decisionElement.className = 'decision-admis';
-                        resultImage.src = 'C1.jpg';
+                        resultImage.src = 'https://Ghadouri.github.io/C1.jpg';
                         resultImage.style.display = 'block';
                     } else if (record.Decision === 'sessionaire') {
                         decisionElement.className = 'decision-sessionaire';
-                        resultImage.src = 'C3.jpg';
+                        resultImage.src = 'https://Ghadouri.github.io/C3.jpg';
                         resultImage.style.display = 'block';
                     } else {
                         decisionElement.className = '';
