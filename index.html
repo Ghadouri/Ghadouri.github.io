@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتائج باك</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            direction: rtl; /* Right-to-left text direction */
+        }
+        header, footer {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        footer {
+            font-size: 14px;
+            padding: 10px;
+            position: relative;
+            margin-top: auto; /* Ensure footer sticks to the bottom of the viewport */
+        }
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 80px auto 20px; /* Adjusted top margin to accommodate fixed header */
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 24px;
+            color: #007bff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+        .result p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        .moyenne {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            padding: 10px;
+            background-color: #e7f0ff;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .message {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        نتائج باك
+    </header>
+    <div class="container">
+        <h1>نتائج باك</h1>
+        <div class="form-group">
+            <label for="bacNumber">أدخل رقم الباك:</label>
+            <input type="number" id="bacNumber" placeholder="مثال: 06245">
+        </div>
+        <button onclick="getResult()">احصل على النتيجة</button>
+        <div class="result">
+            <p id="moyenne" class="moyenne">المعدل: </p>
+            <p id="decision" class="message"></p>
+        </div>
+    </div>
+    <footer>
+        صنع بواسطة قدوري
+    </footer>
+
+    <script>
+        // Load JSON data from the file
+        async function fetchJSON() {
+            try {
+                const response = await fetch('tableConvert.com_u32tuc.json');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log('Fetched data:', data); // Debugging statement
+                return data;
+            } catch (error) {
+                console.error('Error fetching JSON:', error);
+                return [];
+            }
+        }
+
+        // Function to get result based on Bac number
+        async function getResult() {
+            try {
+                const data = await fetchJSON();
+                console.log('Data in getResult:', data); // Debugging statement
+
+                const bacNumber = document.getElementById('bacNumber').value;
+                
+                if (!bacNumber) {
+                    document.getElementById('moyenne').innerText = 'المعدل: مدخل غير صالح';
+                    document.getElementById('decision').innerText = '';
+                    return;
+                }
+                
+                const record = data.find(item => item.Num_Bac === bacNumber);
+                
+                if (record) {
+                    document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
+                    document.getElementById('decision').innerText = 'القرار: ' + record.Decision;
+                } else {
+                    document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
+                    document.getElementById('decision').innerText = '';
+                }
+            } catch (error) {
+                console.error('Error processing data:', error);
+                document.getElementById('moyenne').innerText = 'المعدل: خطأ';
+                document.getElementById('decision').innerText = '';
+            }
+        }
+    </script>
+</body>
+</html>
