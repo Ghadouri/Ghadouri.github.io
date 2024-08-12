@@ -98,6 +98,26 @@
             margin: 10px 0;
             font-size: 16px;
         }
+        .result p.decision-ajourne {
+            color: red;
+        }
+        .result p.decision-admis {
+            color: green;
+        }
+        .result p.decision-sessionaire {
+            color: orange;
+        }
+
+        footer {
+            background-color: #0056b3;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-top: auto;
+        }
 
         @media screen and (max-width: 600px) {
             header {
@@ -116,6 +136,10 @@
             }
             .result p {
                 font-size: 14px;
+            }
+            footer {
+                font-size: 18px;
+                padding: 12px;
             }
         }
     </style>
@@ -136,6 +160,9 @@
             <p id="decision">القرار: -</p>
         </div>
     </div>
+    <footer>
+        Ghadouri
+    </footer>
 
     <script>
         // رابط مباشر للملف JSON على GitHub Pages
@@ -149,7 +176,6 @@
                     throw new Error('تعذر الاتصال بالشبكة');
                 }
                 const data = await response.json();
-                console.log('البيانات التي تم جلبها:', data);
                 return data;
             } catch (error) {
                 console.error('خطأ في جلب بيانات JSON:', error);
@@ -171,17 +197,32 @@
 
                 const record = data.find(item => item.Num_Bac === bacNumber);
 
+                const decisionElement = document.getElementById('decision');
+
                 if (record) {
                     document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
-                    document.getElementById('decision').innerText = 'القرار: ' + record.Decision;
+                    decisionElement.innerText = 'القرار: ' + record.Decision;
+
+                    // تعيين لون النص بناءً على قيمة القرار
+                    if (record.Decision === 'Ajourné') {
+                        decisionElement.className = 'decision-ajourne';
+                    } else if (record.Decision === 'admis') {
+                        decisionElement.className = 'decision-admis';
+                    } else if (record.Decision === 'sessionaire') {
+                        decisionElement.className = 'decision-sessionaire';
+                    } else {
+                        decisionElement.className = ''; // إذا كان القرار غير معروف
+                    }
                 } else {
                     document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
-                    document.getElementById('decision').innerText = 'القرار: غير موجود';
+                    decisionElement.innerText = 'القرار: غير موجود';
+                    decisionElement.className = ''; // إعادة ضبط اللون
                 }
             } catch (error) {
                 console.error('خطأ في معالجة البيانات:', error);
                 document.getElementById('moyenne').innerText = 'المعدل: خطأ';
                 document.getElementById('decision').innerText = 'القرار: خطأ';
+                document.getElementById('decision').className = ''; // إعادة ضبط اللون
             }
         }
     </script>
