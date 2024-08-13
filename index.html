@@ -161,6 +161,9 @@
         </div>
         <button onclick="getResult()">الحصول على النتيجة</button>
         <div class="result" id="resultContainer">
+            <p id="name">الإسم: -</p>
+            <p id="institution">المدرسة: -</p>
+            <p id="series">الشعبة: -</p>
             <p id="moyenne">المعدل: -</p>
             <p id="decision">القرار: -</p>
             <img id="resultImage" src="" alt="نتيجة">
@@ -171,10 +174,8 @@
     </footer>
 
     <script>
-        // رابط مباشر للملف JSON على GitHub Pages
         const jsonUrl = 'https://Ghadouri.github.io/tableConvert.com_u32tuc.json';
 
-        // تحميل بيانات JSON من الرابط
         async function fetchJSON() {
             try {
                 const response = await fetch(jsonUrl);
@@ -189,14 +190,16 @@
             }
         }
 
-        // دالة للحصول على النتيجة بناءً على رقم الباك
         async function getResult() {
             try {
                 const data = await fetchJSON();
                 const bacNumber = document.getElementById('bacNumber').value.trim();
 
                 if (!bacNumber) {
-                    document.getElementById('moyenne').innerText = 'المعدل: يرجى إدخال رقم الباك';
+                    document.getElementById('name').innerText = 'الإسم: يرجى إدخال رقم الباك';
+                    document.getElementById('institution').innerText = 'المدرسة: غير صالح';
+                    document.getElementById('series').innerText = 'الشعبة: غير صالح';
+                    document.getElementById('moyenne').innerText = 'المعدل: -';
                     document.getElementById('decision').innerText = 'القرار: غير صالح';
                     document.getElementById('resultImage').style.display = 'none';
                     return;
@@ -204,14 +207,19 @@
 
                 const record = data.find(item => item.Num_Bac == bacNumber);
 
+                const nameElement = document.getElementById('name');
+                const institutionElement = document.getElementById('institution');
+                const seriesElement = document.getElementById('series');
                 const decisionElement = document.getElementById('decision');
                 const resultImage = document.getElementById('resultImage');
 
                 if (record) {
+                    nameElement.innerText = 'الإسم: ' + record.NOM_AR;
+                    institutionElement.innerText = 'المدرسة: ' + record.Etablissement_FR;
+                    seriesElement.innerText = 'الشعبة: ' + record.Serie_FR;
                     document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
                     decisionElement.innerText = 'القرار: ' + record.Decision;
 
-                    // تعيين لون النص وعرض الصورة بناءً على قيمة القرار
                     if (record.Decision.includes('Ajourné')) {
                         decisionElement.className = 'decision-ajourne';
                         resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
@@ -226,20 +234,26 @@
                         resultImage.style.display = 'block';
                     } else {
                         decisionElement.className = '';
-                        resultImage.style.display = 'none'; // إخفاء الصورة إذا كان القرار غير معروف
+                        resultImage.style.display = 'none';
                     }
                 } else {
+                    nameElement.innerText = 'الإسم: غير موجود';
+                    institutionElement.innerText = 'المدرسة: غير موجود';
+                    seriesElement.innerText = 'الشعبة: غير موجود';
                     document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
                     decisionElement.innerText = 'القرار: غير موجود';
                     decisionElement.className = '';
-                    resultImage.style.display = 'none'; // إخفاء الصورة في حالة عدم وجود نتيجة
+                    resultImage.style.display = 'none';
                 }
             } catch (error) {
                 console.error('خطأ في معالجة البيانات:', error);
+                document.getElementById('name').innerText = 'الإسم: خطأ';
+                document.getElementById('institution').innerText = 'المدرسة: خطأ';
+                document.getElementById('series').innerText = 'الشعبة: خطأ';
                 document.getElementById('moyenne').innerText = 'المعدل: خطأ';
                 document.getElementById('decision').innerText = 'القرار: خطأ';
                 document.getElementById('decision').className = '';
-                document.getElementById('resultImage').style.display = 'none'; // إخفاء الصورة في حالة حدوث خطأ
+                document.getElementById('resultImage').style.display = 'none';
             }
         }
     </script>
