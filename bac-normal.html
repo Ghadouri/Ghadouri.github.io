@@ -162,7 +162,8 @@
         <button onclick="getResult()">الحصول على النتيجة</button>
         <div class="result" id="resultContainer">
             <p id="name">الإسم: -</p>
-            <p id="institution">المؤسسة: -</p>
+            <p id="institution">المدرسة: -</p>
+            <p id="series">الشعبة: -</p>
             <p id="moyenne">المعدل: -</p>
             <p id="decision">القرار: -</p>
             <img id="resultImage" src="" alt="نتيجة">
@@ -173,56 +174,86 @@
     </footer>
 
     <script>
-        const jsonData = [
-            {"NOM_AR":"فاطمه ان بوي المختار","Etablissement_FR":"Aboudoujana","Num_Bac":36999,"Serie_FR":"Sciences Naturelles","Moy_Bac":6.375,"Decision":"Ajourné Sn"},
-            {"NOM_AR":"زينب سيدن محمد","Etablissement_FR":"Lycée  Nema","Num_Bac":35733,"Serie_FR":"Sciences Naturelles","Moy_Bac":8.7741935484,"Decision":"Sessionnaire"},
-            {"NOM_AR":"منايه احمد لمام","Etablissement_FR":"Lycée  Nema","Num_Bac":35071,"Serie_FR":"Sciences Naturelles","Moy_Bac":7.2016129032,"Decision":"Ajourné Sn"},
-            {"NOM_AR":"عزي محمد يسلم الخطاط","Etablissement_FR":"Lycée  Nema","Num_Bac":35027,"Serie_FR":"Sciences Naturelles","Moy_Bac":8.4623655914,"Decision":"Sessionnaire"}
-        ];
+        const jsonUrl = 'https://Ghadouri.github.io/tableConvert.com_u32tuc.json';
 
-        function getResult() {
-            const bacNumber = document.getElementById('bacNumber').value.trim();
-
-            if (!bacNumber) {
-                document.getElementById('name').innerText = 'الإسم: يرجى إدخال رقم الباك';
-                document.getElementById('institution').innerText = 'المؤسسة: -';
-                document.getElementById('moyenne').innerText = 'المعدل: -';
-                document.getElementById('decision').innerText = 'القرار: -';
-                document.getElementById('resultImage').style.display = 'none';
-                return;
+        async function fetchJSON() {
+            try {
+                const response = await fetch(jsonUrl);
+                if (!response.ok) {
+                    throw new Error('تعذر الاتصال بالشبكة');
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('خطأ في جلب بيانات JSON:', error);
+                return [];
             }
+        }
 
-            const record = jsonData.find(item => item.Num_Bac == bacNumber);
+        async function getResult() {
+            try {
+                const data = await fetchJSON();
+                const bacNumber = document.getElementById('bacNumber').value.trim();
 
-            const decisionElement = document.getElementById('decision');
-            const resultImage = document.getElementById('resultImage');
+                if (!bacNumber) {
+                    document.getElementById('name').innerText = 'الإسم: يرجى إدخال رقم الباك';
+                    document.getElementById('institution').innerText = 'المدرسة: غير صالح';
+                    document.getElementById('series').innerText = 'الشعبة: غير صالح';
+                    document.getElementById('moyenne').innerText = 'المعدل: -';
+                    document.getElementById('decision').innerText = 'القرار: غير صالح';
+                    document.getElementById('resultImage').style.display = 'none';
+                    return;
+                }
 
-            if (record) {
-                document.getElementById('name').innerText = 'الإسم: ' + record.NOM_AR;
-                document.getElementById('institution').innerText = 'المؤسسة: ' + record.Etablissement_FR;
-                document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
-                decisionElement.innerText = 'القرار: ' + record.Decision;
+                const record = data.find(item => item.Num_Bac == bacNumber);
 
-                // Display the corresponding image based on the decision
-                if (record.Decision.includes('Ajourné')) {
-                    decisionElement.className = 'decision-ajourne';
-                    resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
-                    resultImage.style.display = 'block';
-                } else if (record.Decision.includes('Sessionnaire')) {
-                    decisionElement.className = 'decision-sessionaire';
-                    resultImage.src = 'https://Ghadouri.github.io/C3.jpg';
-                    resultImage.style.display = 'block';
+                const nameElement = document.getElementById('name');
+                const institutionElement = document.getElementById('institution');
+                const seriesElement = document.getElementById('series');
+                const decisionElement = document.getElementById('decision');
+                const resultImage = document.getElementById('resultImage');
+
+                if (record) {
+                    nameElement.innerText = 'الإسم: ' + record.NOM_AR;
+                    institutionElement.innerText = 'المدرسة: ' + record.Etablissement_FR;
+                    seriesElement.innerText = 'الشعبة: ' + record.Serie_FR;
+                    document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
+                    decisionElement.innerText = 'القرار: ' + record.Decision;
+
+                    if (record.Decision.includes('Ajourné')) {
+                        decisionElement.className = 'decision-ajourne';
+                        resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
+                        resultImage.style.display = 'block';
+                    } else if (record.Decision.includes('Sessionnaire')) {
+                        decisionElement.className = 'decision-sessionaire';
+                        resultImage.src = 'https://Ghadouri.github.io/C3.jpg';
+                        resultImage.style.display = 'block';
+                    } else if (record.Decision === 'admis' || record.Decision === 'delibrable') {
+                        decisionElement.className = 'decision-admis';
+                        resultImage.src = 'https://Ghadouri.github.io/C1.jpg';
+                        resultImage.style.display = 'block';
+                    } else {
+                        decisionElement.className = '';
+                        resultImage.style.display = 'none';
+                    }
                 } else {
+                    nameElement.innerText = 'الإسم: غير موجود';
+                    institutionElement.innerText = 'المدرسة: غير موجود';
+                    seriesElement.innerText = 'الشعبة: غير موجود';
+                    document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
+                    decisionElement.innerText = 'القرار: غير موجود';
                     decisionElement.className = '';
                     resultImage.style.display = 'none';
                 }
-            } else {
-                document.getElementById('name').innerText = 'الإسم: غير موجود';
-                document.getElementById('institution').innerText = 'المؤسسة: غير موجود';
-                document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
-                decisionElement.innerText = 'القرار: غير موجود';
-                decisionElement.className = '';
-                resultImage.style.display = 'none';
+            } catch (error) {
+                console.error('خطأ في معالجة البيانات:', error);
+                document.getElementById('name').innerText = 'الإسم: خطأ';
+                document.getElementById('institution').innerText = 'المدرسة: خطأ';
+                document.getElementById('series').innerText = 'الشعبة: خطأ';
+                document.getElementById('moyenne').innerText = 'المعدل: خطأ';
+                document.getElementById('decision').innerText = 'القرار: خطأ';
+                document.getElementById('decision').className = '';
+                document.getElementById('resultImage').style.display = 'none';
             }
         }
     </script>
