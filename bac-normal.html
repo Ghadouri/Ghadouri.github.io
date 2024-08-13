@@ -162,7 +162,7 @@
         <button onclick="getResult()">الحصول على النتيجة</button>
         <div class="result" id="resultContainer">
             <p id="name">الإسم: -</p>
-            <p id="institution">المدرسة: -</p>
+            <p id="institution">المؤسسة: -</p>
             <p id="series">الشعبة: -</p>
             <p id="moyenne">المعدل: -</p>
             <p id="decision">القرار: -</p>
@@ -197,7 +197,7 @@
 
                 if (!bacNumber) {
                     document.getElementById('name').innerText = 'الإسم: يرجى إدخال رقم الباك';
-                    document.getElementById('institution').innerText = 'المدرسة: غير صالح';
+                    document.getElementById('institution').innerText = 'المؤسسة: غير صالح';
                     document.getElementById('series').innerText = 'الشعبة: غير صالح';
                     document.getElementById('moyenne').innerText = 'المعدل: -';
                     document.getElementById('decision').innerText = 'القرار: غير صالح';
@@ -215,8 +215,8 @@
 
                 if (record) {
                     nameElement.innerText = 'الإسم: ' + record.NOM_AR;
-                    institutionElement.innerText = 'المدرسة: ' + record.Etablissement_FR;
-                    seriesElement.innerText = 'الشعبة: ' + record.Serie_FR;
+                    institutionElement.innerText = 'المؤسسة: ' + record.Etablissement_AR;
+                    seriesElement.innerText = 'الشعبة: ' + record.Serie_AR;
                     document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
                     decisionElement.innerText = 'القرار: ' + record.Decision;
 
@@ -238,7 +238,7 @@
                     }
                 } else {
                     nameElement.innerText = 'الإسم: غير موجود';
-                    institutionElement.innerText = 'المدرسة: غير موجود';
+                    institutionElement.innerText = 'المؤسسة: غير موجود';
                     seriesElement.innerText = 'الشعبة: غير موجود';
                     document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
                     decisionElement.innerText = 'القرار: غير موجود';
@@ -247,15 +247,4 @@
                 }
             } catch (error) {
                 console.error('خطأ في معالجة البيانات:', error);
-                document.getElementById('name').innerText = 'الإسم: خطأ';
-                document.getElementById('institution').innerText = 'المدرسة: خطأ';
-                document.getElementById('series').innerText = 'الشعبة: خطأ';
-                document.getElementById('moyenne').innerText = 'المعدل: خطأ';
-                document.getElementById('decision').innerText = 'القرار: خطأ';
-                document.getElementById('decision').className = '';
-                document.getElementById('resultImage').style.display = 'none';
-            }
-        }
-    </script>
-</body>
-</html>
+                document.getElementById('name').innerText = 'الإسم: خطأ
