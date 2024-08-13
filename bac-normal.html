@@ -247,4 +247,15 @@
                 }
             } catch (error) {
                 console.error('خطأ في معالجة البيانات:', error);
-                document.getElementById('name').innerText = 'الإسم: خطأ
+                document.getElementById('name').innerText = 'الإسم: خطأ';
+                document.getElementById('institution').innerText = 'المؤسسة: خطأ';
+                document.getElementById('series').innerText = 'الشعبة: خطأ';
+                document.getElementById('moyenne').innerText = 'المعدل: خطأ';
+                document.getElementById('decision').innerText = 'القرار: خطأ';
+                document.getElementById('decision').className = '';
+                document.getElementById('resultImage').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
