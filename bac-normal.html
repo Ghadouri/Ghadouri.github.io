@@ -161,6 +161,8 @@
         </div>
         <button onclick="getResult()">الحصول على النتيجة</button>
         <div class="result" id="resultContainer">
+            <p id="name">الإسم: -</p>
+            <p id="institution">المؤسسة: -</p>
             <p id="moyenne">المعدل: -</p>
             <p id="decision">القرار: -</p>
             <img id="resultImage" src="" alt="نتيجة">
@@ -171,75 +173,56 @@
     </footer>
 
     <script>
-        // رابط مباشر للملف JSON على GitHub Pages
-        const jsonUrl = 'https://Ghadouri.github.io/tableConvert.com_u32tuc.json';
+        const jsonData = [
+            {"NOM_AR":"فاطمه ان بوي المختار","Etablissement_FR":"Aboudoujana","Num_Bac":36999,"Serie_FR":"Sciences Naturelles","Moy_Bac":6.375,"Decision":"Ajourné Sn"},
+            {"NOM_AR":"زينب سيدن محمد","Etablissement_FR":"Lycée  Nema","Num_Bac":35733,"Serie_FR":"Sciences Naturelles","Moy_Bac":8.7741935484,"Decision":"Sessionnaire"},
+            {"NOM_AR":"منايه احمد لمام","Etablissement_FR":"Lycée  Nema","Num_Bac":35071,"Serie_FR":"Sciences Naturelles","Moy_Bac":7.2016129032,"Decision":"Ajourné Sn"},
+            {"NOM_AR":"عزي محمد يسلم الخطاط","Etablissement_FR":"Lycée  Nema","Num_Bac":35027,"Serie_FR":"Sciences Naturelles","Moy_Bac":8.4623655914,"Decision":"Sessionnaire"}
+        ];
 
-        // تحميل بيانات JSON من الرابط
-        async function fetchJSON() {
-            try {
-                const response = await fetch(jsonUrl);
-                if (!response.ok) {
-                    throw new Error('تعذر الاتصال بالشبكة');
-                }
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error('خطأ في جلب بيانات JSON:', error);
-                return [];
+        function getResult() {
+            const bacNumber = document.getElementById('bacNumber').value.trim();
+
+            if (!bacNumber) {
+                document.getElementById('name').innerText = 'الإسم: يرجى إدخال رقم الباك';
+                document.getElementById('institution').innerText = 'المؤسسة: -';
+                document.getElementById('moyenne').innerText = 'المعدل: -';
+                document.getElementById('decision').innerText = 'القرار: -';
+                document.getElementById('resultImage').style.display = 'none';
+                return;
             }
-        }
 
-        // دالة للحصول على النتيجة بناءً على رقم الباك
-        async function getResult() {
-            try {
-                const data = await fetchJSON();
-                const bacNumber = document.getElementById('bacNumber').value.trim();
+            const record = jsonData.find(item => item.Num_Bac == bacNumber);
 
-                if (!bacNumber) {
-                    document.getElementById('moyenne').innerText = 'المعدل: يرجى إدخال رقم الباك';
-                    document.getElementById('decision').innerText = 'القرار: غير صالح';
-                    document.getElementById('resultImage').style.display = 'none';
-                    return;
-                }
+            const decisionElement = document.getElementById('decision');
+            const resultImage = document.getElementById('resultImage');
 
-                const record = data.find(item => item.Num_Bac === bacNumber);
+            if (record) {
+                document.getElementById('name').innerText = 'الإسم: ' + record.NOM_AR;
+                document.getElementById('institution').innerText = 'المؤسسة: ' + record.Etablissement_FR;
+                document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
+                decisionElement.innerText = 'القرار: ' + record.Decision;
 
-                const decisionElement = document.getElementById('decision');
-                const resultImage = document.getElementById('resultImage');
-
-                if (record) {
-                    document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
-                    decisionElement.innerText = 'القرار: ' + record.Decision;
-
-                    // تعيين لون النص وعرض الصورة بناءً على قيمة القرار
-                    if (record.Decision === 'Ajourné') {
-                        decisionElement.className = 'decision-ajourne';
-                        resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
-                        resultImage.style.display = 'block';
-                    } else if (record.Decision === 'admis' || record.Decision === 'delibrable') {
-                        decisionElement.className = 'decision-admis';
-                        resultImage.src = 'https://Ghadouri.github.io/C1.jpg';
-                        resultImage.style.display = 'block';
-                    } else if (record.Decision === 'sessionaire') {
-                        decisionElement.className = 'decision-sessionaire';
-                        resultImage.src = 'https://Ghadouri.github.io/C3.jpg';
-                        resultImage.style.display = 'block';
-                    } else {
-                        decisionElement.className = '';
-                        resultImage.style.display = 'none'; // إخفاء الصورة إذا كان القرار غير معروف
-                    }
+                // Display the corresponding image based on the decision
+                if (record.Decision.includes('Ajourné')) {
+                    decisionElement.className = 'decision-ajourne';
+                    resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
+                    resultImage.style.display = 'block';
+                } else if (record.Decision.includes('Sessionnaire')) {
+                    decisionElement.className = 'decision-sessionaire';
+                    resultImage.src = 'https://Ghadouri.github.io/C3.jpg';
+                    resultImage.style.display = 'block';
                 } else {
-                    document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
-                    decisionElement.innerText = 'القرار: غير موجود';
                     decisionElement.className = '';
-                    resultImage.style.display = 'none'; // إخفاء الصورة في حالة عدم وجود نتيجة
+                    resultImage.style.display = 'none';
                 }
-            } catch (error) {
-                console.error('خطأ في معالجة البيانات:', error);
-                document.getElementById('moyenne').innerText = 'المعدل: خطأ';
-                document.getElementById('decision').innerText = 'القرار: خطأ';
-                document.getElementById('decision').className = '';
-                document.getElementById('resultImage').style.display = 'none'; // إخفاء الصورة في حالة حدوث خطأ
+            } else {
+                document.getElementById('name').innerText = 'الإسم: غير موجود';
+                document.getElementById('institution').innerText = 'المؤسسة: غير موجود';
+                document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
+                decisionElement.innerText = 'القرار: غير موجود';
+                decisionElement.className = '';
+                resultImage.style.display = 'none';
             }
         }
     </script>
