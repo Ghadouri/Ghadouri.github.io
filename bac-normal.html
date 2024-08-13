@@ -101,7 +101,7 @@
         .result p.decision-ajourne {
             color: red;
         }
-        .result p.decision-admis, .result p.decision-delibrable {
+        .result p.decision-admis {
             color: green;
         }
         .result p.decision-sessionaire {
@@ -222,15 +222,15 @@
 
                     if (record.Decision.includes('Ajourné')) {
                         decisionElement.className = 'decision-ajourne';
-                        resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
+                        resultImage.src = 'https://Ghadouri.github.io/C3.jpg';
                         resultImage.style.display = 'block';
                     } else if (record.Decision.includes('Sessionnaire')) {
                         decisionElement.className = 'decision-sessionaire';
-                        resultImage.src = 'https://Ghadouri.github.io/C3.jpg';
-                        resultImage.style.display = 'block';
-                    } else if (record.Decision === 'admis' || record.Decision === 'delibrable') {
-                        decisionElement.className = 'decision-admis';
                         resultImage.src = 'https://Ghadouri.github.io/C1.jpg';
+                        resultImage.style.display = 'block';
+                    } else if (record.Decision === 'admis') {
+                        decisionElement.className = 'decision-admis';
+                        resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
                         resultImage.style.display = 'block';
                     } else {
                         decisionElement.className = '';
@@ -249,13 +249,4 @@
                 console.error('خطأ في معالجة البيانات:', error);
                 document.getElementById('name').innerText = 'الإسم: خطأ';
                 document.getElementById('institution').innerText = 'المؤسسة: خطأ';
-                document.getElementById('series').innerText = 'الشعبة: خطأ';
-                document.getElementById('moyenne').innerText = 'المعدل: خطأ';
-                document.getElementById('decision').innerText = 'القرار: خطأ';
-                document.getElementById('decision').className = '';
-                document.getElementById('resultImage').style.display = 'none';
-            }
-        }
-    </script>
-</body>
-</html>
+                document.getElementById
