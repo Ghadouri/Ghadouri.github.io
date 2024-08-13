@@ -228,7 +228,7 @@
                         decisionElement.className = 'decision-sessionaire';
                         resultImage.src = 'https://Ghadouri.github.io/C1.jpg';
                         resultImage.style.display = 'block';
-                    } else if (record.Decision === 'admis') {
+                    } else if (record.Decision === 'Admis') {
                         decisionElement.className = 'decision-admis';
                         resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
                         resultImage.style.display = 'block';
@@ -249,4 +249,13 @@
                 console.error('خطأ في معالجة البيانات:', error);
                 document.getElementById('name').innerText = 'الإسم: خطأ';
                 document.getElementById('institution').innerText = 'المؤسسة: خطأ';
-                document.getElementById
+                document.getElementById('series').innerText = 'الشعبة: خطأ';
+                document.getElementById('moyenne').innerText = 'المعدل: خطأ';
+                document.getElementById('decision').innerText = 'القرار: خطأ';
+                document.getElementById('decision').className = '';
+                document.getElementById('resultImage').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
