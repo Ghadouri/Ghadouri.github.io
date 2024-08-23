@@ -87,7 +87,7 @@
         <button onclick="searchResult()">بحث</button>
         <div class="result-container" id="resultContainer">
             <div><strong>الاسم:</strong> <span id="nameResult"></span></div>
-            <div><strong>المركز:</strong> <span id="centerResult"></span></div>
+            <div><strong>المؤسسة:</strong> <span id="centerResult"></span></div>
             <div><strong>المعدل:</strong> <span id="averageResult"></span></div>
             <div><strong>القرار:</strong> <span id="decisionResult"></span></div>
         </div>
@@ -99,10 +99,10 @@
             fetch('https://ghadouri.github.io/S2.json')
                 .then(response => response.json())
                 .then(data => {
-                    const result = data.find(item => item.Num_Bac === searchNumber);
+                    const result = data.find(item => item.Num_Bac == searchNumber);
                     if (result) {
                         document.getElementById('nameResult').textContent = result.NOM_AR;
-                        document.getElementById('centerResult').textContent = result.Etablissement_AR;
+                        document.getElementById('centerResult').textContent = result.Etablissement_FR;
                         document.getElementById('averageResult').textContent = result.Moy_Bac;
                         document.getElementById('decisionResult').textContent = result.Decision;
                         document.getElementById('resultContainer').style.display = 'block';
