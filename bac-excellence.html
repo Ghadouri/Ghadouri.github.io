@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتائج الإمتياز</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #a0c4ff, #b9fbc0);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            direction: rtl;
+        }
+        .main-container {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease-in-out;
+        }
+        .main-container:hover {
+            transform: translateY(0);
+        }
+        .header {
+            font-family: 'Traditional Arabic', serif;
+            font-size: 36px;
+            color: #0056b3;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            font-size: 18px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #007bff, #00c6ff);
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #0056b3, #00aaff);
+            transform: scale(1.03);
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .result-container {
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+        }
+        .result-container div {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            نتائج الإمتياز
+        </div>
+        <input type="text" id="searchNumber" placeholder="أدخل الرقم">
+        <button onclick="searchResult()">بحث</button>
+        <div class="result-container" id="resultContainer">
+            <div><strong>الاسم:</strong> <span id="nameResult"></span></div>
+            <div><strong>المركز:</strong> <span id="centerResult"></span></div>
+            <div><strong>المعدل:</strong> <span id="averageResult"></span></div>
+            <div><strong>القرار:</strong> <span id="decisionResult"></span></div>
+        </div>
+    </div>
+
+    <script>
+        function searchResult() {
+            const searchNumber = document.getElementById('searchNumber').value;
+            fetch('https://ghadouri.github.io/S2.json')
+                .then(response => response.json())
+                .then(data => {
+                    const result = data.find(item => item.Num_Bac === searchNumber);
+                    if (result) {
+                        document.getElementById('nameResult').textContent = result.NOM_AR;
+                        document.getElementById('centerResult').textContent = result.Etablissement_AR;
+                        document.getElementById('averageResult').textContent = result.Moy_Bac;
+                        document.getElementById('decisionResult').textContent = result.Decision;
+                        document.getElementById('resultContainer').style.display = 'block';
+                    } else {
+                        alert('لم يتم العثور على نتائج لهذا الرقم.');
+                        document.getElementById('resultContainer').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching JSON data:', error);
+                });
+        }
+    </script>
+</body>
+</html>
