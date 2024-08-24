@@ -66,6 +66,7 @@
             transform: scale(1.03);
         }
         button:active {
+            background: linear-gradient(135deg, #0056b3, #0099ff);
             transform: scale(0.98);
         }
         .result-container {
@@ -89,6 +90,11 @@
             <div><strong>الإسم:</strong> <span id="nameResult"></span></div>
             <div><strong>المعدل:</strong> <span id="averageResult"></span></div>
             <div><strong>القرار:</strong> <span id="decisionResult"></span></div>
+            <div><strong>ملاحظة عربية:</strong> <span id="noteArabe"></span></div>
+            <div><strong>ملاحظة فرنسية:</strong> <span id="noteFrancais"></span></div>
+            <div><strong>ملاحظة حساب:</strong> <span id="noteCalcul"></span></div>
+            <div><strong>ملاحظة فيزيائية:</strong> <span id="notePhysique"></span></div>
+            <div><strong>ملاحظة رياضيات:</strong> <span id="noteMaths"></span></div>
         </div>
     </div>
 
@@ -98,12 +104,16 @@
             fetch('https://ghadouri.github.io/S2.json')
                 .then(response => response.json())
                 .then(data => {
-                    // Assuming the structure you provided where data is inside "Feuil1"
                     const result = data.Feuil1.find(item => item.NODOSS == searchNumber);
                     if (result) {
                         document.getElementById('nameResult').textContent = result.Nom;
                         document.getElementById('averageResult').textContent = result.Moyenne_generale;
                         document.getElementById('decisionResult').textContent = result.Decision;
+                        document.getElementById('noteArabe').textContent = result.Note_ARABE_1AS;
+                        document.getElementById('noteFrancais').textContent = result.Note_FRANCAIS_1AS;
+                        document.getElementById('noteCalcul').textContent = result.Note_CALCUL_1AS;
+                        document.getElementById('notePhysique').textContent = result.Note_PHYSIQUE_5C;
+                        document.getElementById('noteMaths').textContent = result.Note_MATHS_5C;
                         document.getElementById('resultContainer').style.display = 'block';
                     } else {
                         alert('لم يتم العثور على نتائج لهذا الرقم.');
