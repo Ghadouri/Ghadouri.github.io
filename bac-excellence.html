@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نتائج الإمتياز</title>
     <style>
+        /* Existing styles */
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #a0c4ff, #b9fbc0);
@@ -39,11 +40,11 @@
             font-weight: bold;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
         }
-        input {
+        input, select {
             display: block;
             width: 100%;
             padding: 15px;
-            margin: 20px 0;
+            margin: 10px 0;
             border-radius: 12px;
             border: 1px solid #ccc;
             font-size: 18px;
@@ -77,6 +78,17 @@
         .result-container div {
             margin: 10px 0;
         }
+        .message {
+            font-family: 'Traditional Arabic', serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .message.failure {
+            color: #dc3545;
+        }
     </style>
 </head>
 <body>
@@ -85,27 +97,52 @@
             نتائج الإمتياز
         </div>
         <input type="text" id="searchNumber" placeholder="أدخل الرقم">
+        
+        <!-- New filters -->
+        <select id="regionFilter">
+            <option value="All">كل المناطق</option>
+            <option value="الحوض الشرقي">الحوض الشرقي</option>
+            <option value="حوض غربي">حوض غربي</option>
+            <!-- Add more regions as needed -->
+        </select>
+        <select id="decisionFilter">
+            <option value="All">كل القرارات</option>
+            <option value="Admis">ناجح</option>
+            <option value="راسب">راسب</option>
+            <!-- Add more decisions as needed -->
+        </select>
+
         <button onclick="searchResult()">بحث</button>
         <div class="result-container" id="resultContainer">
             <div><strong>الإسم:</strong> <span id="nameResult"></span></div>
             <div><strong>المعدل:</strong> <span id="averageResult"></span></div>
             <div><strong>القرار:</strong> <span id="decisionResult"></span></div>
-            <div id="noteArabe" style="display:none;"><strong>نتيجة عربية:</strong> <span></span></div>
-            <div id="noteFrancais" style="display:none;"><strong>نتيجة فرنسية:</strong> <span></span></div>
-            <div id="noteCalcul" style="display:none;"><strong>نتيجة حساب:</strong> <span></span></div>
-            <div id="notePhysique" style="display:none;"><strong>نتيجة فيزيائية:</strong> <span></span></div>
-            <div id="noteMaths" style="display:none;"><strong>نتيجة رياضيات:</strong> <span></span></div>
+            <div id="noteArabe" style="display:none;"><strong>نتيجة العربية:</strong> <span></span></div>
+            <div id="noteFrancais" style="display:none;"><strong>نتيجة الفرنسية:</strong> <span></span></div>
+            <div id="noteCalcul" style="display:none;"><strong>نتيجة الحساب:</strong> <span></span></div>
+            <div id="notePhysique" style="display:none;"><strong>نتيجة الفيزياء:</strong> <span></span></div>
+            <div id="noteMaths" style="display:none;"><strong>نتيجة الرياضيات:</strong> <span></span></div>
+            <div id="message" class="message"></div>
         </div>
     </div>
 
     <script>
         function searchResult() {
             const searchNumber = document.getElementById('searchNumber').value;
+            const regionFilter = document.getElementById('regionFilter').value;
+            const decisionFilter = document.getElementById('decisionFilter').value;
+            
             fetch('https://ghadouri.github.io/S2.json')
                 .then(response => response.json())
                 .then(data => {
-                    const result = data.Feuil1.find(item => item.NODOSS == searchNumber);
-                    if (result) {
+                    const filteredResults = data.Feuil1.filter(item => {
+                        return (item.NODOSS == searchNumber || !searchNumber) &&
+                               (regionFilter === 'All' || item.LregA === regionFilter) &&
+                               (decisionFilter === 'All' || item.Decision === decisionFilter);
+                    });
+
+                    if (filteredResults.length > 0) {
+                        const result = filteredResults[0]; // Display the first matching result
                         document.getElementById('nameResult').textContent = result.Nom;
                         document.getElementById('averageResult').textContent = result.Moyenne_generale;
                         document.getElementById('decisionResult').textContent = result.Decision;
@@ -127,8 +164,20 @@
                         updateNote('noteMaths', result.Note_MATHS_5C);
 
                         document.getElementById('resultContainer').style.display = 'block';
+
+                        // Display congratulatory or encouraging message
+                        const messageElement = document.getElementById('message');
+                        if (result.Decision === 'Admis') {
+                            messageElement.textContent = 'مبروك';
+                            messageElement.classList.remove('failure');
+                        } else {
+                            messageElement.textContent = 'القادم أفضل';
+                            messageElement.classList.add('failure');
+                        }
+                        messageElement.style.display = 'block';
+
                     } else {
-                        alert('لم يتم العثور على نتائج لهذا الرقم.');
+                        alert('لم يتم العثور على نتائج.');
                         document.getElementById('resultContainer').style.display = 'none';
                     }
                 })
