@@ -148,7 +148,6 @@
             }
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
 </head>
 <body>
     <header>
@@ -173,8 +172,10 @@
         <span style="font-family: 'Cursive', sans-serif; font-size: 24px;">Ghadouri</span>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
     <script>
         const jsonUrl = 'https://Ghadouri.github.io/S1.json';
+        const jsConfetti = new JSConfetti(); // Initialize JSConfetti
 
         async function fetchJSON() {
             try {
@@ -229,6 +230,10 @@
                         decisionElement.className = 'decision-admis';
                         resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
                         resultImage.style.display = 'block';
+                        // Add confetti effect
+                        jsConfetti.addConfetti({
+                            confettiNumber: 75
+                        });
                     } else {
                         decisionElement.className = '';
                         resultImage.style.display = 'none';
