@@ -231,9 +231,7 @@
                         resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
                         resultImage.style.display = 'block';
                         // Add confetti effect
-                        jsConfetti.addConfetti({
-                            confettiNumber: 75
-                        });
+                        jsConfetti.addConfetti();
                     } else {
                         decisionElement.className = '';
                         resultImage.style.display = 'none';
@@ -248,6 +246,11 @@
                 }
             } catch (error) {
                 console.error('خطأ في معالجة البيانات:', error);
+                document.getElementById('name').innerText = 'الإسم: خطأ';
+                document.getElementById('institution').innerText = 'المؤسسة: خطأ';
+                document.getElementById('moyenne').innerText = 'المعدل: -';
+                document.getElementById('decision').innerText = 'القرار: خطأ';
+                document.getElementById('resultImage').style.display = 'none';
             }
         }
     </script>
