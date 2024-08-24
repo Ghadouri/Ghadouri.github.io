@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نتائج الإمتياز</title>
     <style>
-        /* Existing styles */
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #a0c4ff, #b9fbc0);
@@ -17,6 +16,7 @@
             align-items: center;
             height: 100vh;
             direction: rtl;
+            text-align: right;
         }
         .main-container {
             background: #fff;
@@ -25,7 +25,6 @@
             padding: 40px;
             max-width: 500px;
             width: 90%;
-            text-align: center;
             transform: translateY(-20px);
             transition: transform 0.3s ease-in-out;
         }
@@ -40,7 +39,7 @@
             font-weight: bold;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
         }
-        input, select {
+        input {
             display: block;
             width: 100%;
             padding: 15px;
@@ -72,7 +71,6 @@
         }
         .result-container {
             margin-top: 20px;
-            text-align: left;
             display: none;
         }
         .result-container div {
@@ -80,7 +78,7 @@
         }
         .message {
             font-family: 'Traditional Arabic', serif;
-            font-size: 24px;
+            font-size: 36px;
             font-weight: bold;
             color: #28a745;
             text-align: center;
@@ -97,21 +95,6 @@
             نتائج الإمتياز
         </div>
         <input type="text" id="searchNumber" placeholder="أدخل الرقم">
-        
-        <!-- New filters -->
-        <select id="regionFilter">
-            <option value="All">كل المناطق</option>
-            <option value="الحوض الشرقي">الحوض الشرقي</option>
-            <option value="حوض غربي">حوض غربي</option>
-            <!-- Add more regions as needed -->
-        </select>
-        <select id="decisionFilter">
-            <option value="All">كل القرارات</option>
-            <option value="Admis">ناجح</option>
-            <option value="راسب">راسب</option>
-            <!-- Add more decisions as needed -->
-        </select>
-
         <button onclick="searchResult()">بحث</button>
         <div class="result-container" id="resultContainer">
             <div><strong>الإسم:</strong> <span id="nameResult"></span></div>
@@ -129,17 +112,11 @@
     <script>
         function searchResult() {
             const searchNumber = document.getElementById('searchNumber').value;
-            const regionFilter = document.getElementById('regionFilter').value;
-            const decisionFilter = document.getElementById('decisionFilter').value;
             
             fetch('https://ghadouri.github.io/S2.json')
                 .then(response => response.json())
                 .then(data => {
-                    const filteredResults = data.Feuil1.filter(item => {
-                        return (item.NODOSS == searchNumber || !searchNumber) &&
-                               (regionFilter === 'All' || item.LregA === regionFilter) &&
-                               (decisionFilter === 'All' || item.Decision === decisionFilter);
-                    });
+                    const filteredResults = data.Feuil1.filter(item => item.NODOSS == searchNumber);
 
                     if (filteredResults.length > 0) {
                         const result = filteredResults[0]; // Display the first matching result
