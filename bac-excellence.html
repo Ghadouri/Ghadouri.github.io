@@ -90,11 +90,11 @@
             <div><strong>الإسم:</strong> <span id="nameResult"></span></div>
             <div><strong>المعدل:</strong> <span id="averageResult"></span></div>
             <div><strong>القرار:</strong> <span id="decisionResult"></span></div>
-            <div><strong>ملاحظة عربية:</strong> <span id="noteArabe"></span></div>
-            <div><strong>ملاحظة فرنسية:</strong> <span id="noteFrancais"></span></div>
-            <div><strong>ملاحظة حساب:</strong> <span id="noteCalcul"></span></div>
-            <div><strong>ملاحظة فيزيائية:</strong> <span id="notePhysique"></span></div>
-            <div><strong>ملاحظة رياضيات:</strong> <span id="noteMaths"></span></div>
+            <div id="noteArabe" style="display:none;"><strong>نتيجة عربية:</strong> <span></span></div>
+            <div id="noteFrancais" style="display:none;"><strong>نتيجة فرنسية:</strong> <span></span></div>
+            <div id="noteCalcul" style="display:none;"><strong>نتيجة حساب:</strong> <span></span></div>
+            <div id="notePhysique" style="display:none;"><strong>نتيجة فيزيائية:</strong> <span></span></div>
+            <div id="noteMaths" style="display:none;"><strong>نتيجة رياضيات:</strong> <span></span></div>
         </div>
     </div>
 
@@ -109,11 +109,23 @@
                         document.getElementById('nameResult').textContent = result.Nom;
                         document.getElementById('averageResult').textContent = result.Moyenne_generale;
                         document.getElementById('decisionResult').textContent = result.Decision;
-                        document.getElementById('noteArabe').textContent = result.Note_ARABE_1AS;
-                        document.getElementById('noteFrancais').textContent = result.Note_FRANCAIS_1AS;
-                        document.getElementById('noteCalcul').textContent = result.Note_CALCUL_1AS;
-                        document.getElementById('notePhysique').textContent = result.Note_PHYSIQUE_5C;
-                        document.getElementById('noteMaths').textContent = result.Note_MATHS_5C;
+                        
+                        function updateNote(id, value) {
+                            const noteElement = document.getElementById(id);
+                            if (value) {
+                                noteElement.querySelector('span').textContent = value;
+                                noteElement.style.display = 'block';
+                            } else {
+                                noteElement.style.display = 'none';
+                            }
+                        }
+
+                        updateNote('noteArabe', result.Note_ARABE_1AS);
+                        updateNote('noteFrancais', result.Note_FRANCAIS_1AS);
+                        updateNote('noteCalcul', result.Note_CALCUL_1AS);
+                        updateNote('notePhysique', result.Note_PHYSIQUE_5C);
+                        updateNote('noteMaths', result.Note_MATHS_5C);
+
                         document.getElementById('resultContainer').style.display = 'block';
                     } else {
                         alert('لم يتم العثور على نتائج لهذا الرقم.');
