@@ -98,10 +98,11 @@
             fetch('https://ghadouri.github.io/S2.json')
                 .then(response => response.json())
                 .then(data => {
-                    const result = data.find(item => item.Num_Bac == searchNumber);
+                    // Assuming the structure you provided where data is inside "Feuil1"
+                    const result = data.Feuil1.find(item => item.NODOSS == searchNumber);
                     if (result) {
-                        document.getElementById('nameResult').textContent = result.NOM_AR;
-                        document.getElementById('averageResult').textContent = result.Moy_Bac;
+                        document.getElementById('nameResult').textContent = result.Nom;
+                        document.getElementById('averageResult').textContent = result.Moyenne_generale;
                         document.getElementById('decisionResult').textContent = result.Decision;
                         document.getElementById('resultContainer').style.display = 'block';
                     } else {
