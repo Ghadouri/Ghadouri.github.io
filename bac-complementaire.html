@@ -94,25 +94,10 @@
             background-color: #f9f9f9;
             border-radius: 8px;
         }
-        .result p {
-            margin: 10px 0;
-            font-size: 16px;
-        }
-        .result p.decision-ajourne {
-            color: red;
-        }
-        .result p.decision-admis {
-            color: green;
-        }
-        .result p.decision-sessionaire {
-            color: orange;
-        }
-        .result img {
-            margin-top: 15px;
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            display: none;
+        .result iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
         }
         footer {
             background-color: #0056b3;
@@ -139,47 +124,13 @@
                 margin: 70px auto 20px;
                 padding: 15px;
             }
-            .result p {
-                font-size: 14px;
+            .result iframe {
+                height: 400px;
             }
             footer {
                 font-size: 18px;
                 padding: 12px;
             }
-        }
-        .iframe-container {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            overflow: auto;
-        }
-        .iframe-container.show {
-            display: block;
-        }
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #fff;
-            border: 2px solid #0056b3;
-            color: #0056b3;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            text-align: center;
-            line-height: 30px;
-            font-size: 18px;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -193,113 +144,24 @@
             <label for="bacNumber">أدخل رقم الباك:</label>
             <input type="number" id="bacNumber" placeholder="مثال: 17958">
         </div>
-        <button onclick="getResult()">الحصول على النتيجة</button>
-        <button onclick="openDetailedResults()">عرض النتائج التفصيلية</button>
-        <div class="result" id="resultContainer">
-            <p id="name">الإسم: -</p>
-            <p id="institution">المؤسسة: -</p>
-            <p id="moyenne">المعدل: -</p>
-            <p id="decision">القرار: -</p>
-            <img id="resultImage" src="" alt="نتيجة">
+        <button onclick="loadResults()">عرض النتيجة التفصيلية</button>
+        <div class="result">
+            <iframe id="resultIframe" src="" title="نتائج الباكالوريا"></iframe>
         </div>
     </div>
     <footer>
         <span style="font-family: 'Cursive', sans-serif; font-size: 24px;">Ghadouri</span>
     </footer>
 
-    <!-- Hidden iframe container for detailed results -->
-    <div class="iframe-container" id="iframeContainer">
-        <span class="close-btn" onclick="closeIframe()">×</span>
-        <iframe id="iframe" src="" frameborder="0"></iframe>
-    </div>
-
     <script>
-        const jsonUrl = 'https://Ghadouri.github.io/S1.json';
-        const iframeUrl = 'https://dec.education.gov.mr/';
-        const iframeContainer = document.getElementById('iframeContainer');
-        const iframe = document.getElementById('iframe');
-
-        async function fetchJSON() {
-            try {
-                const response = await fetch(jsonUrl);
-                if (!response.ok) {
-                    throw new Error('تعذر الاتصال بالشبكة');
-                }
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error('خطأ في جلب بيانات JSON:', error);
-                return [];
-            }
-        }
-
-        async function getResult() {
-            try {
-                const data = await fetchJSON();
-                const bacNumber = document.getElementById('bacNumber').value.trim();
-
-                if (!bacNumber) {
-                    document.getElementById('name').innerText = 'الإسم: يرجى إدخال رقم الباك';
-                    document.getElementById('institution').innerText = 'المؤسسة: غير صالح';
-                    document.getElementById('moyenne').innerText = 'المعدل: -';
-                    document.getElementById('decision').innerText = 'القرار: غير صالح';
-                    document.getElementById('resultImage').style.display = 'none';
-                    return;
-                }
-
-                const record = data.find(item => item.Num_Bac == bacNumber);
-
-                const nameElement = document.getElementById('name');
-                const institutionElement = document.getElementById('institution');
-                const decisionElement = document.getElementById('decision');
-                const resultImage = document.getElementById('resultImage');
-
-                if (record) {
-                    nameElement.innerText = 'الإسم: ' + record.NOM_AR;
-                    institutionElement.innerText = 'المؤسسة: ' + record.Etablissement_AR;
-                    document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
-                    decisionElement.innerText = 'القرار: ' + record.Decision;
-
-                    if (record.Decision.includes('Ajourné')) {
-                        decisionElement.className = 'decision-ajourne';
-                        resultImage.style.display = 'block';
-                        resultImage.src = 'path_to_ajourne_image.jpg'; // Replace with actual image path
-                    } else if (record.Decision.includes('Admis')) {
-                        decisionElement.className = 'decision-admis';
-                        resultImage.style.display = 'block';
-                        resultImage.src = 'path_to_admis_image.jpg'; // Replace with actual image path
-                    } else if (record.Decision.includes('Sessionnaire')) {
-                        decisionElement.className = 'decision-sessionaire';
-                        resultImage.style.display = 'block';
-                        resultImage.src = 'path_to_sessionnaire_image.jpg'; // Replace with actual image path
-                    } else {
-                        decisionElement.className = '';
-                        resultImage.style.display = 'none';
-                    }
-                } else {
-                    nameElement.innerText = 'الإسم: غير موجود';
-                    institutionElement.innerText = 'المؤسسة: غير موجود';
-                    document.getElementById('moyenne').innerText = 'المعدل: -';
-                    decisionElement.innerText = 'القرار: غير موجود';
-                    resultImage.style.display = 'none';
-                }
-            } catch (error) {
-                console.error('خطأ في الحصول على النتيجة:', error);
-            }
-        }
-
-        function openDetailedResults() {
+        function loadResults() {
             const bacNumber = document.getElementById('bacNumber').value.trim();
             if (bacNumber) {
-                iframe.src = `${iframeUrl}?number=${bacNumber}`;
-                iframeContainer.classList.add('show');
+                const iframe = document.getElementById('resultIframe');
+                iframe.src = `https://dec.education.gov.mr/search-bac?number=${bacNumber}`;
             } else {
                 alert('يرجى إدخال رقم الباك');
             }
-        }
-
-        function closeIframe() {
-            iframeContainer.classList.remove('show');
         }
     </script>
 </body>
