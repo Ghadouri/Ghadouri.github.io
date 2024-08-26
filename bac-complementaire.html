@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نتائج الباك</title>
+    <title>نتائج الباكالوريا</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -147,19 +147,54 @@
                 padding: 12px;
             }
         }
+        .iframe-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow: auto;
+        }
+        .iframe-container.show {
+            display: block;
+        }
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #fff;
+            border: 2px solid #0056b3;
+            color: #0056b3;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            font-size: 18px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <header>
-        نتائج الباك
+        نتائج الباكالوريا
     </header>
     <div class="container">
         <h1>تحقق من نتيجتك</h1>
         <div class="form-group">
             <label for="bacNumber">أدخل رقم الباك:</label>
-            <input type="number" id="bacNumber" placeholder="مثال: 06245">
+            <input type="number" id="bacNumber" placeholder="مثال: 17958">
         </div>
         <button onclick="getResult()">الحصول على النتيجة</button>
+        <button onclick="openDetailedResults()">عرض النتائج التفصيلية</button>
         <div class="result" id="resultContainer">
             <p id="name">الإسم: -</p>
             <p id="institution">المؤسسة: -</p>
@@ -172,10 +207,17 @@
         <span style="font-family: 'Cursive', sans-serif; font-size: 24px;">Ghadouri</span>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+    <!-- Hidden iframe container for detailed results -->
+    <div class="iframe-container" id="iframeContainer">
+        <span class="close-btn" onclick="closeIframe()">×</span>
+        <iframe id="iframe" src="" frameborder="0"></iframe>
+    </div>
+
     <script>
         const jsonUrl = 'https://Ghadouri.github.io/S1.json';
-        const jsConfetti = new JSConfetti(); // Initialize JSConfetti
+        const iframeUrl = 'https://dec.education.gov.mr/';
+        const iframeContainer = document.getElementById('iframeContainer');
+        const iframe = document.getElementById('iframe');
 
         async function fetchJSON() {
             try {
@@ -214,24 +256,22 @@
 
                 if (record) {
                     nameElement.innerText = 'الإسم: ' + record.NOM_AR;
-                    institutionElement.innerText = 'المؤسسة: ' + record.Etablissement_AR; // Updated field
+                    institutionElement.innerText = 'المؤسسة: ' + record.Etablissement_AR;
                     document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
                     decisionElement.innerText = 'القرار: ' + record.Decision;
 
                     if (record.Decision.includes('Ajourné')) {
                         decisionElement.className = 'decision-ajourne';
-                        resultImage.src = 'https://Ghadouri.github.io/C3.jpg';
                         resultImage.style.display = 'block';
+                        resultImage.src = 'path_to_ajourne_image.jpg'; // Replace with actual image path
+                    } else if (record.Decision.includes('Admis')) {
+                        decisionElement.className = 'decision-admis';
+                        resultImage.style.display = 'block';
+                        resultImage.src = 'path_to_admis_image.jpg'; // Replace with actual image path
                     } else if (record.Decision.includes('Sessionnaire')) {
                         decisionElement.className = 'decision-sessionaire';
-                        resultImage.src = 'https://Ghadouri.github.io/C1.jpg';
                         resultImage.style.display = 'block';
-                    } else if (record.Decision === 'Admis') {
-                        decisionElement.className = 'decision-admis';
-                        resultImage.src = 'https://Ghadouri.github.io/C2.jpg';
-                        resultImage.style.display = 'block';
-                        // Add confetti effect
-                        jsConfetti.addConfetti();
+                        resultImage.src = 'path_to_sessionnaire_image.jpg'; // Replace with actual image path
                     } else {
                         decisionElement.className = '';
                         resultImage.style.display = 'none';
@@ -239,19 +279,27 @@
                 } else {
                     nameElement.innerText = 'الإسم: غير موجود';
                     institutionElement.innerText = 'المؤسسة: غير موجود';
-                    document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
+                    document.getElementById('moyenne').innerText = 'المعدل: -';
                     decisionElement.innerText = 'القرار: غير موجود';
-                    decisionElement.className = '';
                     resultImage.style.display = 'none';
                 }
             } catch (error) {
-                console.error('خطأ في معالجة البيانات:', error);
-                document.getElementById('name').innerText = 'الإسم: خطأ';
-                document.getElementById('institution').innerText = 'المؤسسة: خطأ';
-                document.getElementById('moyenne').innerText = 'المعدل: -';
-                document.getElementById('decision').innerText = 'القرار: خطأ';
-                document.getElementById('resultImage').style.display = 'none';
+                console.error('خطأ في الحصول على النتيجة:', error);
             }
+        }
+
+        function openDetailedResults() {
+            const bacNumber = document.getElementById('bacNumber').value.trim();
+            if (bacNumber) {
+                iframe.src = `${iframeUrl}?number=${bacNumber}`;
+                iframeContainer.classList.add('show');
+            } else {
+                alert('يرجى إدخال رقم الباك');
+            }
+        }
+
+        function closeIframe() {
+            iframeContainer.classList.remove('show');
         }
     </script>
 </body>
