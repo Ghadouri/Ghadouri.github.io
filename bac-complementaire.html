@@ -165,9 +165,9 @@
         </div>
         <button onclick="getResult()">الحصول على النتيجة</button>
         <div class="result" id="resultContainer">
-            <p id="name" onclick="toggleDetail('name')">الإسم: -</p>
-            <p id="institution" onclick="toggleDetail('institution')">المؤسسة: -</p>
-            <p id="moyenne" onclick="toggleDetail('moyenne')">المعدل: -</p>
+            <p id="name" class="hidden">الإسم: -</p>
+            <p id="institution" class="hidden">المؤسسة: -</p>
+            <p id="moyenne" class="hidden">المعدل: -</p>
             <p id="decision">القرار: -</p>
             <img id="resultImage" src="" alt="نتيجة">
         </div>
@@ -218,9 +218,14 @@
 
                 if (record) {
                     nameElement.innerText = 'الإسم: ' + record.NOM_AR;
-                    institutionElement.innerText = 'المؤسسة: ' + record.Etablissement_AR; // Updated field
+                    institutionElement.innerText = 'المؤسسة: ' + record.Etablissement_AR;
                     document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
                     decisionElement.innerText = 'القرار: ' + record.Decision;
+
+                    // Display details
+                    nameElement.classList.remove('hidden');
+                    institutionElement.classList.remove('hidden');
+                    document.getElementById('moyenne').classList.remove('hidden');
 
                     if (record.Decision.includes('Ajourné')) {
                         decisionElement.className = 'decision-ajourne';
@@ -247,6 +252,10 @@
                     decisionElement.innerText = 'القرار: غير موجود';
                     decisionElement.className = '';
                     resultImage.style.display = 'none';
+                    // Hide details
+                    nameElement.classList.add('hidden');
+                    institutionElement.classList.add('hidden');
+                    document.getElementById('moyenne').classList.add('hidden');
                 }
             } catch (error) {
                 console.error('خطأ في معالجة البيانات:', error);
@@ -255,15 +264,10 @@
                 document.getElementById('moyenne').innerText = 'المعدل: -';
                 document.getElementById('decision').innerText = 'القرار: خطأ';
                 document.getElementById('resultImage').style.display = 'none';
-            }
-        }
-
-        function toggleDetail(id) {
-            const element = document.getElementById(id);
-            if (element.classList.contains('hidden')) {
-                element.classList.remove('hidden');
-            } else {
-                element.classList.add('hidden');
+                // Hide details
+                document.getElementById('name').classList.add('hidden');
+                document.getElementById('institution').classList.add('hidden');
+                document.getElementById('moyenne').classList.add('hidden');
             }
         }
     </script>
