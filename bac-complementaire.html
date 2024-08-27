@@ -168,7 +168,7 @@
             <p id="name" class="hidden">الإسم: -</p>
             <p id="institution" class="hidden">المؤسسة: -</p>
             <p id="moyenne" class="hidden">المعدل: -</p>
-            <p id="decision">القرار: -</p>
+            <p id="decision" class="hidden">القرار: -</p>
             <img id="resultImage" src="" alt="نتيجة">
         </div>
     </div>
@@ -206,6 +206,11 @@
                     document.getElementById('moyenne').innerText = 'المعدل: -';
                     document.getElementById('decision').innerText = 'القرار: غير صالح';
                     document.getElementById('resultImage').style.display = 'none';
+                    // Hide details
+                    document.getElementById('name').classList.add('hidden');
+                    document.getElementById('institution').classList.add('hidden');
+                    document.getElementById('moyenne').classList.add('hidden');
+                    document.getElementById('decision').classList.add('hidden');
                     return;
                 }
 
@@ -226,6 +231,7 @@
                     nameElement.classList.remove('hidden');
                     institutionElement.classList.remove('hidden');
                     document.getElementById('moyenne').classList.remove('hidden');
+                    decisionElement.classList.remove('hidden');
 
                     if (record.Decision.includes('Ajourné')) {
                         decisionElement.className = 'decision-ajourne';
@@ -256,6 +262,7 @@
                     nameElement.classList.add('hidden');
                     institutionElement.classList.add('hidden');
                     document.getElementById('moyenne').classList.add('hidden');
+                    decisionElement.classList.add('hidden');
                 }
             } catch (error) {
                 console.error('خطأ في معالجة البيانات:', error);
@@ -268,6 +275,7 @@
                 document.getElementById('name').classList.add('hidden');
                 document.getElementById('institution').classList.add('hidden');
                 document.getElementById('moyenne').classList.add('hidden');
+                document.getElementById('decision').classList.add('hidden');
             }
         }
     </script>
