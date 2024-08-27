@@ -93,6 +93,7 @@
             border-top: 1px solid #ddd;
             background-color: #f9f9f9;
             border-radius: 8px;
+            display: none; /* Hidden by default */
         }
         .result p {
             margin: 10px 0;
@@ -203,6 +204,7 @@
                     document.getElementById('moyenne').innerText = 'المعدل: -';
                     document.getElementById('decision').innerText = 'القرار: غير صالح';
                     document.getElementById('resultImage').style.display = 'none';
+                    document.getElementById('resultContainer').style.display = 'none'; // Hide result container
                     return;
                 }
 
@@ -213,6 +215,7 @@
                 const seriesElement = document.getElementById('series');
                 const decisionElement = document.getElementById('decision');
                 const resultImage = document.getElementById('resultImage');
+                const resultContainer = document.getElementById('resultContainer');
 
                 if (record) {
                     nameElement.innerText = 'الإسم: ' + record.NOM_AR;
@@ -220,6 +223,8 @@
                     seriesElement.innerText = 'الشعبة: ' + record.Serie_FR;
                     document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
                     decisionElement.innerText = 'القرار: ' + record.Decision;
+
+                    resultContainer.style.display = 'block'; // Show result container
 
                     if (record.Decision.includes('Ajourné')) {
                         decisionElement.className = 'decision-ajourne';
@@ -245,6 +250,7 @@
                     decisionElement.innerText = 'القرار: غير موجود';
                     decisionElement.className = '';
                     resultImage.style.display = 'none';
+                    resultContainer.style.display = 'block'; // Show result container
                 }
             } catch (error) {
                 console.error('خطأ في معالجة البيانات:', error);
@@ -254,6 +260,7 @@
                 document.getElementById('moyenne').innerText = 'المعدل: خطأ';
                 document.getElementById('decision').innerText = 'القرار: خطأ';
                 document.getElementById('resultImage').style.display = 'none';
+                document.getElementById('resultContainer').style.display = 'block'; // Show result container
             }
         }
     </script>
