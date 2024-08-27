@@ -5,27 +5,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نتائج الباك</title>
     <style>
-        /* Existing styles */
-        /* Add or adjust styles for subject results */
-        .subject-results {
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            direction: rtl;
+        }
+        header {
+            background-color: #0056b3;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 80px auto 30px;
+            max-width: 90%;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 24px;
+            color: #0056b3;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="number"]:focus {
+            border-color: #0056b3;
+            outline: none;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background-color: #0056b3;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #003d7a;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .result, .subject-results {
             margin-top: 20px;
             padding: 15px;
             border-top: 1px solid #ddd;
             background-color: #f9f9f9;
             border-radius: 8px;
         }
-        .subject-results table {
-            width: 100%;
-            border-collapse: collapse;
+        .result p, .subject-results p {
+            margin: 10px 0;
+            font-size: 16px;
         }
-        .subject-results th, .subject-results td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
+        .result p.decision-ajourne {
+            color: red;
         }
-        .subject-results th {
+        .result p.decision-admis {
+            color: green;
+        }
+        .result p.decision-sessionaire {
+            color: orange;
+        }
+        .result img {
+            margin-top: 15px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: none;
+        }
+        footer {
             background-color: #0056b3;
             color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-top: auto;
+        }
+        @media screen and (max-width: 600px) {
+            header {
+                font-size: 20px;
+                padding: 12px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            label, input[type="number"], button {
+                font-size: 14px;
+            }
+            .container {
+                margin: 70px auto 20px;
+                padding: 15px;
+            }
+            .result p, .subject-results p {
+                font-size: 14px;
+            }
+            footer {
+                font-size: 18px;
+                padding: 12px;
+            }
         }
     </style>
 </head>
@@ -37,7 +157,7 @@
         <h1>تحقق من نتيجتك</h1>
         <div class="form-group">
             <label for="bacNumber">أدخل رقم الباك:</label>
-            <input type="number" id="bacNumber" placeholder="مثال: 06245">
+            <input type="number" id="bacNumber" placeholder="مثال: 17958">
         </div>
         <button onclick="getResult()">الحصول على النتيجة</button>
         <div class="result" id="resultContainer">
@@ -48,7 +168,7 @@
             <img id="resultImage" src="" alt="نتيجة">
         </div>
         <div class="subject-results" id="subjectResults">
-            <h3>نتائج المواد</h3>
+            <h2>نتائج المواد</h2>
             <table id="subjectTable">
                 <thead>
                     <tr>
@@ -60,8 +180,8 @@
                         <th>المجموع</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Subject results will be inserted here -->
+                <tbody id="subjectTableBody">
+                    <!-- سيتم ملء النتائج هنا بواسطة JavaScript -->
                 </tbody>
             </table>
         </div>
@@ -70,104 +190,74 @@
         <span style="font-family: 'Cursive', sans-serif; font-size: 24px;">Ghadouri</span>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
     <script>
-        const jsonUrl = 'https://Ghadouri.github.io/S1.json';
-        const subjectDataUrl = 'https://example.com/subject-results'; // Update with the correct URL
-        const jsConfetti = new JSConfetti();
-
-        async function fetchJSON(url) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('تعذر الاتصال بالشبكة');
-                }
-                return await response.json();
-            } catch (error) {
-                console.error('خطأ في جلب بيانات JSON:', error);
-                return [];
-            }
-        }
-
-        async function getResult() {
-            try {
-                const jsonData = await fetchJSON(jsonUrl);
-                const subjectData = await fetchJSON(subjectDataUrl);
-                const bacNumber = document.getElementById('bacNumber').value.trim();
-
-                if (!bacNumber) {
-                    document.getElementById('name').innerText = 'الإسم: يرجى إدخال رقم الباك';
-                    document.getElementById('institution').innerText = 'المؤسسة: غير صالح';
-                    document.getElementById('moyenne').innerText = 'المعدل: -';
-                    document.getElementById('decision').innerText = 'القرار: غير صالح';
-                    document.getElementById('resultImage').style.display = 'none';
-                    document.getElementById('subjectResults').style.display = 'none';
-                    return;
-                }
-
-                const record = jsonData.find(item => item.Num_Bac == bacNumber);
-
-                if (record) {
-                    document.getElementById('name').innerText = 'الإسم: ' + record.NOM_AR;
-                    document.getElementById('institution').innerText = 'المؤسسة: ' + record.Etablissement_AR;
-                    document.getElementById('moyenne').innerText = 'المعدل: ' + record.Moy_Bac;
-                    document.getElementById('decision').innerText = 'القرار: ' + record.Decision;
-
-                    if (record.Decision.includes('Ajourné')) {
-                        document.getElementById('decision').className = 'decision-ajourne';
-                        document.getElementById('resultImage').src = 'https://Ghadouri.github.io/C3.jpg';
-                        document.getElementById('resultImage').style.display = 'block';
-                    } else if (record.Decision.includes('Sessionnaire')) {
-                        document.getElementById('decision').className = 'decision-sessionaire';
-                        document.getElementById('resultImage').src = 'https://Ghadouri.github.io/C1.jpg';
-                        document.getElementById('resultImage').style.display = 'block';
-                    } else if (record.Decision === 'Admis') {
-                        document.getElementById('decision').className = 'decision-admis';
-                        document.getElementById('resultImage').src = 'https://Ghadouri.github.io/C2.jpg';
-                        document.getElementById('resultImage').style.display = 'block';
-                        jsConfetti.addConfetti();
-                    } else {
-                        document.getElementById('decision').className = '';
-                        document.getElementById('resultImage').style.display = 'none';
+        // Simulated data for demonstration
+        const resultsData = {
+            "17958": {
+                name: "محمد عبد الرحمان الشيخ ماء العينين سيد المصطفى",
+                institution: "ثانوية عرفات 3",
+                moyenne: "11.671875",
+                decision: "Admis Sc",
+                subjects: [
+                    {
+                        name: "Sciences Naturelles",
+                        weight: "8",
+                        firstRound: "6.25",
+                        secondRound: "10",
+                        finalResult: "10",
+                        total: "80"
+                    },
+                    {
+                        name: "Physiques Chimie",
+                        weight: "7",
+                        firstRound: "3.25",
+                        secondRound: "11.5",
+                        finalResult: "11.5",
+                        total: "80.5"
+                    },
+                    {
+                        name: "Mathematiques",
+                        weight: "6",
+                        firstRound: "16.5",
+                        secondRound: "9.75",
+                        finalResult: "16.5",
+                        total: "99"
                     }
+                ]
+            },
+            // Add more simulated data here for other numbers
+        };
 
-                    // Display subject results
-                    const subjectTableBody = document.getElementById('subjectTable').getElementsByTagName('tbody')[0];
-                    subjectTableBody.innerHTML = ''; // Clear previous results
+        function getResult() {
+            const bacNumber = document.getElementById('bacNumber').value.trim();
+            const result = resultsData[bacNumber];
 
-                    subjectData.forEach(subject => {
-                        if (subject.bacNumber === bacNumber) {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${subject.subject}</td>
-                                <td>${subject.weight}</td>
-                                <td>${subject.firstRound}</td>
-                                <td>${subject.secondRound}</td>
-                                <td>${subject.finalResult}</td>
-                                <td>${subject.total}</td>
-                            `;
-                            subjectTableBody.appendChild(row);
-                        }
-                    });
+            if (result) {
+                document.getElementById('name').innerText = 'الإسم: ' + result.name;
+                document.getElementById('institution').innerText = 'المؤسسة: ' + result.institution;
+                document.getElementById('moyenne').innerText = 'المعدل: ' + result.moyenne;
+                document.getElementById('decision').innerText = 'القرار: ' + result.decision;
 
-                    document.getElementById('subjectResults').style.display = 'block';
-                } else {
-                    document.getElementById('name').innerText = 'الإسم: غير موجود';
-                    document.getElementById('institution').innerText = 'المؤسسة: غير موجود';
-                    document.getElementById('moyenne').innerText = 'المعدل: غير موجود';
-                    document.getElementById('decision').innerText = 'القرار: غير موجود';
-                    document.getElementById('decision').className = '';
-                    document.getElementById('resultImage').style.display = 'none';
-                    document.getElementById('subjectResults').style.display = 'none';
-                }
-            } catch (error) {
-                console.error('خطأ في معالجة البيانات:', error);
-                document.getElementById('name').innerText = 'الإسم: خطأ';
-                document.getElementById('institution').innerText = 'المؤسسة: خطأ';
+                // Populate the subjects table
+                const subjectTableBody = document.getElementById('subjectTableBody');
+                subjectTableBody.innerHTML = ''; // Clear previous data
+                result.subjects.forEach(subject => {
+                    const row = `<tr>
+                        <td>${subject.name}</td>
+                        <td>${subject.weight}</td>
+                        <td>${subject.firstRound}</td>
+                        <td>${subject.secondRound}</td>
+                        <td>${subject.finalResult}</td>
+                        <td>${subject.total}</td>
+                    </tr>`;
+                    subjectTableBody.innerHTML += row;
+                });
+            } else {
+                document.getElementById('name').innerText = 'الإسم: -';
+                document.getElementById('institution').innerText = 'المؤسسة: -';
                 document.getElementById('moyenne').innerText = 'المعدل: -';
-                document.getElementById('decision').innerText = 'القرار: خطأ';
-                document.getElementById('resultImage').style.display = 'none';
-                document.getElementById('subjectResults').style.display = 'none';
+                document.getElementById('decision').innerText = 'القرار: غير صالح';
+                document.getElementById('subjectTableBody').innerHTML = '';
             }
         }
     </script>
