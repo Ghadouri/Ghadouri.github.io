@@ -46,15 +46,6 @@
     .student-list button:hover {
       background-color: #fcd5b5;
     }
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 22px;
-      }
-      select, .student-list button {
-        font-size: 16px;
-        padding: 12px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -67,37 +58,43 @@
   <div class="student-list" id="studentList"></div>
 
   <script>
-    let data = [];
+    let students = [];
+    let schools = [];
 
-    fetch('total_nom_ar.json')
-      .then(response => response.json())
+    // تحميل التلاميذ
+    fetch('data2.json')
+      .then(res => res.json())
       .then(json => {
-        data = json;
+        students = json;
+      });
 
-        // ملء المدارس
-        const schools = [...new Set(data.map(item => item.ECOLE))];
-        const schoolSelect = document.getElementById('schoolSelect');
+    // تحميل أسماء المدارس بالعربية
+    fetch('ecoles.json')
+      .then(res => res.json())
+      .then(json => {
+        schools = json;
 
+        const select = document.getElementById('schoolSelect');
         schools.forEach(school => {
           const option = document.createElement('option');
-          option.value = school;
-          option.textContent = school;
-          schoolSelect.appendChild(option);
+          option.value = school.ECOLE;
+          option.textContent = school.ECOLE_AR;
+          select.appendChild(option);
         });
       });
 
+    // عند تغيير اختيار المدرسة
     document.getElementById('schoolSelect').addEventListener('change', function () {
       const selectedSchool = this.value;
+      const filtered = students.filter(s => s.ECOLE === selectedSchool);
+
       const studentList = document.getElementById('studentList');
       studentList.innerHTML = '';
-
-      const filtered = data.filter(item => item.ECOLE === selectedSchool);
 
       filtered.forEach(student => {
         const btn = document.createElement('button');
         btn.textContent = student.NOM_AR;
         btn.onclick = () => {
-          // حفظ في localStorage وفتح صفحة التفاصيل
           localStorage.setItem('student', JSON.stringify(student));
           window.location.href = 'details.html';
         };
