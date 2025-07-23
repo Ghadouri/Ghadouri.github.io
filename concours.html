@@ -10,7 +10,6 @@
       box-sizing: border-box;
       font-family: 'Cairo', sans-serif;
     }
-
     body {
       background: linear-gradient(135deg, #ffecd2, #fcb69f);
       direction: rtl;
@@ -18,15 +17,13 @@
       margin: 0;
       color: #333;
     }
-
     h1 {
       text-align: center;
       color: #d35400;
       font-size: 28px;
       margin-bottom: 30px;
     }
-
-    input[type="text"] {
+    select, .student-list button {
       width: 100%;
       padding: 14px;
       margin-top: 20px;
@@ -36,45 +33,24 @@
       outline: none;
       transition: border 0.3s ease;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
     }
-
-    input[type="text"]:focus {
-      border-color: #d35400;
+    .student-list {
+      margin-top: 20px;
     }
-
-    .result {
-      margin-top: 30px;
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s ease;
-      max-width: 600px;
-      margin-right: auto;
-      margin-left: auto;
+    .student-list button {
+      background-color: white;
+      margin-bottom: 10px;
+      text-align: right;
     }
-
-    .value {
-      margin-bottom: 15px;
-      font-size: 18px;
+    .student-list button:hover {
+      background-color: #fcd5b5;
     }
-
-    .label {
-      font-weight: bold;
-      color: #2c3e50;
-      margin-left: 8px;
-    }
-
     @media (max-width: 600px) {
       h1 {
         font-size: 22px;
       }
-
-      .value {
-        font-size: 16px;
-      }
-
-      input[type="text"] {
+      select, .student-list button {
         font-size: 16px;
         padding: 12px;
       }
@@ -84,12 +60,11 @@
 <body>
   <h1>نتائج كونكور</h1>
 
-  <input type="text" id="searchInput" placeholder="أدخل الإسم بالعربية">
+  <select id="schoolSelect">
+    <option value="">اختر المدرسة</option>
+  </select>
 
-  <div class="result" id="resultBox" style="display:none;">
-    <div class="value"><span class="label">الإسم:</span> <span id="nom"></span></div>
-    <div class="value"><span class="label">النتيجة:</span> <span id="total"></span></div>
-  </div>
+  <div class="student-list" id="studentList"></div>
 
   <script>
     let data = [];
@@ -98,19 +73,36 @@
       .then(response => response.json())
       .then(json => {
         data = json;
+
+        // ملء المدارس
+        const schools = [...new Set(data.map(item => item.ECOLE))];
+        const schoolSelect = document.getElementById('schoolSelect');
+
+        schools.forEach(school => {
+          const option = document.createElement('option');
+          option.value = school;
+          option.textContent = school;
+          schoolSelect.appendChild(option);
+        });
       });
 
-    document.getElementById('searchInput').addEventListener('input', function () {
-      const input = this.value.trim();
-      const result = data.find(item => item["NOM_AR"] === input);
+    document.getElementById('schoolSelect').addEventListener('change', function () {
+      const selectedSchool = this.value;
+      const studentList = document.getElementById('studentList');
+      studentList.innerHTML = '';
 
-      if (result) {
-        document.getElementById('nom').textContent = result["NOM_AR"];
-        document.getElementById('total').textContent = result["TOTAL"];
-        document.getElementById('resultBox').style.display = 'block';
-      } else {
-        document.getElementById('resultBox').style.display = 'none';
-      }
+      const filtered = data.filter(item => item.ECOLE === selectedSchool);
+
+      filtered.forEach(student => {
+        const btn = document.createElement('button');
+        btn.textContent = student.NOM_AR;
+        btn.onclick = () => {
+          // حفظ في localStorage وفتح صفحة التفاصيل
+          localStorage.setItem('student', JSON.stringify(student));
+          window.location.href = 'details.html';
+        };
+        studentList.appendChild(btn);
+      });
     });
   </script>
 </body>
