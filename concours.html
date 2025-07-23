@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>نتائج كونكور</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            direction: rtl;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #d35400;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        .result {
+            margin-top: 30px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .label {
+            font-weight: bold;
+            color: #333;
+        }
+        .value {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>نتائج كونكور</h1>
+    <input type="text" id="searchInput" placeholder="أدخل رقم المترشح">
+    <div class="result" id="resultBox" style="display:none;">
+        <div class="value"><span class="label">الإسم:</span> <span id="nom"></span></div>
+        <div class="value"><span class="label">المدرسة:</span> <span id="ecole"></span></div>
+        <div class="value"><span class="label">تاريخ الميلاد:</span> <span id="naissance"></span></div>
+        <div class="value"><span class="label">النتيجة:</span> <span id="total"></span></div>
+    </div>
+
+    <script>
+        let data = [];
+
+        fetch('data2.json')
+            .then(response => response.json())
+            .then(json => {
+                data = json;
+            });
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const input = this.value.trim();
+            const result = data.find(item => item["Numéro Ins"] === input);
+            
+            if (result) {
+                document.getElementById('nom').textContent = result["Nom"];
+                document.getElementById('ecole').textContent = result["Ecole"];
+                document.getElementById('naissance').textContent = result["Année Naiss"];
+                document.getElementById('total').textContent = result["Total"];
+                document.getElementById('resultBox').style.display = 'block';
+            } else {
+                document.getElementById('resultBox').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
