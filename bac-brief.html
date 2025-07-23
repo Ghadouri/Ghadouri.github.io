@@ -2,46 +2,77 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>نتائج التلاميذ</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Arial', sans-serif;
       direction: rtl;
-      background: #eef2f3;
-      padding: 30px;
+      background: linear-gradient(to left, #eef2f3, #f8f9fa);
+      padding: 20px;
+      margin: 0;
     }
 
-    input {
-      padding: 10px;
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    .search-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    input[type="text"] {
+      padding: 12px;
       font-size: 16px;
-      margin-left: 10px;
-      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 300px;
     }
 
     button {
-      padding: 10px 20px;
+      padding: 12px 25px;
       font-size: 16px;
       background-color: #007bff;
       color: white;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
       background-color: #0056b3;
     }
 
-    table {
+    #result {
       margin-top: 30px;
+      overflow-x: auto;
+    }
+
+    table {
       width: 100%;
       border-collapse: collapse;
       background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     th, td {
-      border: 1px solid #ccc;
-      padding: 12px;
+      padding: 14px 10px;
       text-align: center;
+      border-bottom: 1px solid #eee;
     }
 
     th {
@@ -49,14 +80,26 @@
       color: white;
     }
 
-    #result {
-      margin-top: 20px;
-    }
-
     .not-found {
-      margin-top: 20px;
+      text-align: center;
       color: red;
       font-weight: bold;
+      font-size: 18px;
+    }
+
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 20px;
+      }
+
+      input[type="text"], button {
+        width: 90%;
+      }
+
+      table th, table td {
+        font-size: 14px;
+        padding: 10px;
+      }
     }
   </style>
 </head>
@@ -64,8 +107,10 @@
 
   <h2>البحث عن نتائج التلميذ</h2>
 
-  <input type="text" id="searchNNi" placeholder="أدخل رقم NNi">
-  <button onclick="search()">بحث</button>
+  <div class="search-container">
+    <input type="text" id="searchNNi" placeholder="أدخل رقم NNi">
+    <button onclick="search()">بحث</button>
+  </div>
 
   <div id="result"></div>
 
