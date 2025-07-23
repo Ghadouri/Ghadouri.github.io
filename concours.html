@@ -10,6 +10,7 @@
       box-sizing: border-box;
       font-family: 'Cairo', sans-serif;
     }
+
     body {
       background: linear-gradient(135deg, #ffecd2, #fcb69f);
       direction: rtl;
@@ -17,12 +18,14 @@
       margin: 0;
       color: #333;
     }
+
     h1 {
       text-align: center;
       color: #d35400;
       font-size: 28px;
       margin-bottom: 30px;
     }
+
     select, .student-list button {
       width: 100%;
       padding: 14px;
@@ -35,20 +38,34 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       cursor: pointer;
     }
+
     .student-list {
       margin-top: 20px;
     }
+
     .student-list button {
       background-color: white;
       margin-bottom: 10px;
       text-align: right;
     }
+
     .student-list button:hover {
       background-color: #fcd5b5;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 22px;
+      }
+      select, .student-list button {
+        font-size: 16px;
+        padding: 12px;
+      }
     }
   </style>
 </head>
 <body>
+
   <h1>نتائج كونكور</h1>
 
   <select id="schoolSelect">
@@ -59,31 +76,33 @@
 
   <script>
     let students = [];
-    let schools = [];
+    let schoolsLoaded = false;
 
-    // تحميل التلاميذ
+    // تحميل بيانات التلاميذ
     fetch('data2.json')
       .then(res => res.json())
       .then(json => {
         students = json;
       });
 
-    // تحميل أسماء المدارس بالعربية
-    fetch('ecoles.json')
-      .then(res => res.json())
-      .then(json => {
-        schools = json;
+    // تحميل المدارس عند الضغط فقط
+    document.getElementById('schoolSelect').addEventListener('click', function () {
+      if (!schoolsLoaded) {
+        fetch('ecoles.json')
+          .then(res => res.json())
+          .then(json => {
+            json.forEach(item => {
+              const option = document.createElement('option');
+              option.value = item.ECOLE;
+              option.textContent = item.ECOLE_AR;
+              document.getElementById('schoolSelect').appendChild(option);
+            });
+            schoolsLoaded = true;
+          });
+      }
+    });
 
-        const select = document.getElementById('schoolSelect');
-        schools.forEach(school => {
-          const option = document.createElement('option');
-          option.value = school.ECOLE;
-          option.textContent = school.ECOLE_AR;
-          select.appendChild(option);
-        });
-      });
-
-    // عند تغيير اختيار المدرسة
+    // عند اختيار المدرسة
     document.getElementById('schoolSelect').addEventListener('change', function () {
       const selectedSchool = this.value;
       const filtered = students.filter(s => s.ECOLE === selectedSchool);
@@ -102,5 +121,6 @@
       });
     });
   </script>
+
 </body>
 </html>
