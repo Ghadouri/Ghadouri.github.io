@@ -1,238 +1,115 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>نتائج بريفة</title>
+  <meta charset="UTF-8">
+  <title>نتائج التلاميذ</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #f8f9fa;
-      color: #333;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
       direction: rtl;
+      background: #eef2f3;
+      padding: 30px;
     }
-    header {
-      background-color: #0056b3;
-      color: #fff;
-      padding: 15px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-    }
-    .container {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      margin: 80px auto 30px;
-      max-width: 90%;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    h1 {
-      font-size: 24px;
-      color: #0056b3;
-      margin-bottom: 20px;
-      text-align: center;
-      font-weight: bold;
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin-bottom: 10px;
-      font-weight: bold;
+
+    input {
+      padding: 10px;
       font-size: 16px;
+      margin-left: 10px;
+      width: 250px;
     }
-    input[type="number"] {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-size: 16px;
-      transition: border-color 0.3s;
-    }
-    input[type="number"]:focus {
-      border-color: #0056b3;
-      outline: none;
-    }
+
     button {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      background-color: #0056b3;
-      color: #fff;
-      font-size: 18px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-    button:hover {
-      background-color: #003d7a;
-    }
-    button:active {
-      transform: scale(0.98);
-    }
-    .result {
-      margin-top: 20px;
-      padding: 15px;
-      border-top: 1px solid #ddd;
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      display: none;
-    }
-    .result p {
-      margin: 10px 0;
+      padding: 10px 20px;
       font-size: 16px;
-      line-height: 1.5;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
     }
-    .result p.decision-ajourne {
-      color: red;
-    }
-    .result p.decision-admis {
-      color: green;
-    }
-    .result p.decision-sessionnaire {
-      color: orange;
-    }
-    .result img {
-      margin-top: 15px;
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      display: none;
-    }
-    footer {
+
+    button:hover {
       background-color: #0056b3;
-      color: #fff;
-      padding: 15px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-      margin-top: auto;
     }
-    @media screen and (max-width: 600px) {
-      header {
-        font-size: 20px;
-        padding: 12px;
-      }
-      h1 {
-        font-size: 20px;
-      }
-      label, input[type="number"], button {
-        font-size: 14px;
-      }
-      .container {
-        margin: 70px auto 20px;
-        padding: 15px;
-      }
-      .result p {
-        font-size: 14px;
-      }
-      footer {
-        font-size: 18px;
-        padding: 12px;
-      }
+
+    table {
+      margin-top: 30px;
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #343a40;
+      color: white;
+    }
+
+    #result {
+      margin-top: 20px;
+    }
+
+    .not-found {
+      margin-top: 20px;
+      color: red;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <header>نتائج بريفة</header>
-  <div class="container">
-    <h1>تحقق من نتيجتك</h1>
-    <div class="form-group">
-      <label for="bacNumber">أدخل رقم المترشح:</label>
-      <input type="number" id="bacNumber" placeholder="مثال: 12345" />
-    </div>
-    <button onclick="getResult()">الحصول على النتيجة</button>
-    <div class="result" id="resultContainer">
-      <p id="name">الإسم: -</p>
-      <p id="institution">المؤسسة: -</p>
-      <p id="series">الشعبة: -</p>
-      <p id="moyenne">المعدل: -</p>
-      <p id="decision">القرار: -</p>
-      <img id="resultImage" src="" alt="نتيجة" />
-    </div>
-  </div>
-  <footer><span style="font-family: 'Cursive', sans-serif; font-size: 24px;">Ghadouri</span></footer>
+
+  <h2>البحث عن نتائج التلميذ</h2>
+
+  <input type="text" id="searchNNi" placeholder="أدخل رقم NNi">
+  <button onclick="search()">بحث</button>
+
+  <div id="result"></div>
 
   <script>
-    const jsonUrl = 'https://ghadouri.github.io/B.json';
+    async function search() {
+      const input = document.getElementById("searchNNi").value.trim();
+      const resultDiv = document.getElementById("result");
 
-    async function fetchJSON() {
       try {
-        const response = await fetch(jsonUrl);
-        if (!response.ok) throw new Error('تعذر الاتصال بالشبكة');
-        return await response.json();
-      } catch (error) {
-        console.error('خطأ في جلب بيانات JSON:', error);
-        return [];
-      }
-    }
+        const response = await fetch("data.json");
+        const data = await response.json();
 
-    async function getResult() {
-      const bacNumber = document.getElementById('bacNumber').value.trim();
-      const resultContainer = document.getElementById('resultContainer');
-      const nameElement = document.getElementById('name');
-      const institutionElement = document.getElementById('institution');
-      const seriesElement = document.getElementById('series');
-      const moyenneElement = document.getElementById('moyenne');
-      const decisionElement = document.getElementById('decision');
-      const resultImage = document.getElementById('resultImage');
+        const student = data.find(item => item.NNi === input);
 
-      if (!bacNumber) {
-        resultContainer.style.display = 'none';
-        return;
-      }
-
-      const data = await fetchJSON();
-      const record = data.find(item => item.Num_Bac == bacNumber);
-
-      if (record) {
-        nameElement.innerText = 'الإسم: ' + record.NOM_AR;
-        institutionElement.innerText = 'المؤسسة: ' + record.Etablissement_AR;
-        seriesElement.innerText = 'الشعبة: ' + record.Serie_AR;
-        moyenneElement.innerText = 'المعدل: ' + record.Moy_Bac;
-        decisionElement.innerText = 'القرار: ' + record.Decision;
-
-        resultContainer.style.display = 'block';
-
-        if (record.Decision.includes('Ajourné')) {
-          decisionElement.className = 'decision-ajourne';
-          resultImage.src = 'https://ghadouri.github.io/C3.jpg';
-          resultImage.style.display = 'block';
-        } else if (record.Decision.includes('Sessionnaire')) {
-          decisionElement.className = 'decision-sessionnaire';
-          resultImage.src = 'https://ghadouri.github.io/C1.jpg';
-          resultImage.style.display = 'block';
-        } else if (record.Decision === 'Admis') {
-          decisionElement.className = 'decision-admis';
-          resultImage.src = 'https://ghadouri.github.io/C2.jpg';
-          resultImage.style.display = 'block';
+        if (student) {
+          resultDiv.innerHTML = `
+            <table>
+              <tr>
+                <th>NNi</th>
+                <th>الإسم الكامل</th>
+                <th>تاريخ الميلاد</th>
+                <th>رقم التلميذ</th>
+                <th>المعدل العام</th>
+                <th>القرار</th>
+              </tr>
+              <tr>
+                <td>${student.NNi}</td>
+                <td>${student.NOMPL}</td>
+                <td>${student.DATN}</td>
+                <td>${student.NODOSS}</td>
+                <td>${student.MOYG}</td>
+                <td>${student.decision}</td>
+              </tr>
+            </table>
+          `;
         } else {
-          decisionElement.className = '';
-          resultImage.style.display = 'none';
+          resultDiv.innerHTML = `<div class="not-found">لم يتم العثور على التلميذ بهذا الرقم.</div>`;
         }
-      } else {
-        // 🔇 Hide everything if student not found
-        resultContainer.style.display = 'none';
+      } catch (error) {
+        resultDiv.innerHTML = `<div class="not-found">حدث خطأ أثناء تحميل البيانات.</div>`;
+        console.error(error);
       }
     }
   </script>
+
 </body>
 </html>
