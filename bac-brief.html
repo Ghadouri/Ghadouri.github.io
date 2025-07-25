@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>نتائج التلاميذ</title>
-  <!-- خط جميل من Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
@@ -125,6 +124,11 @@
   <div id="result"></div>
 
   <script>
+    function formatDate(timestamp) {
+      const date = new Date(timestamp);
+      return date.toISOString().split('T')[0];
+    }
+
     async function search() {
       const input = document.getElementById("searchNODOSS").value.trim();
       const resultDiv = document.getElementById("result");
@@ -133,26 +137,32 @@
         const response = await fetch("data.json");
         const data = await response.json();
 
-        const student = data.find(item => item.NODOSS === input);
+        const student = data.find(item => item.Num_Bepc.toString() === input);
 
         if (student) {
           resultDiv.innerHTML = `
             <table>
               <tr>
-                <th>NNi</th>
+                <th>رقم التلميذ</th>
                 <th>الإسم الكامل</th>
                 <th>تاريخ الميلاد</th>
-                <th>رقم التلميذ</th>
-                <th>المعدل العام</th>
+                <th>مكان الميلاد</th>
+                <th>الولاية</th>
+                <th>المدرسة</th>
+                <th>المركز</th>
+                <th>المعدل</th>
                 <th>القرار</th>
               </tr>
               <tr>
-                <td>${student.NNi}</td>
-                <td>${student.NOMPL}</td>
-                <td>${student.DATN}</td>
-                <td>${student.NODOSS}</td>
-                <td>${student.MOYG}</td>
-                <td>${student.decision}</td>
+                <td>${student.Num_Bepc}</td>
+                <td>${student.NOM}</td>
+                <td>${formatDate(student.DATE_NAISS)}</td>
+                <td>${student.LIEU_NAIS}</td>
+                <td>${student.WILAYA}</td>
+                <td>${student.Ecole}</td>
+                <td>${student.Centre}</td>
+                <td>${student.Moyenne_Bepc}</td>
+                <td>${student.Decision}</td>
               </tr>
             </table>
           `;
