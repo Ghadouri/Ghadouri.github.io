@@ -1,73 +1,47 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الصفحة الرئيسية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #a0c4ff, #b9fbc0);
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            direction: rtl;
-        }
-        .main-container {
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            transform: translateY(-20px);
-            transition: transform 0.3s ease-in-out;
-        }
-        .main-container:hover {
-            transform: translateY(0);
-        }
-        h1 {
-            font-size: 24px;
-            color: #007bff;
-            margin-bottom: 30px;
-            font-weight: 600;
-            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #007bff, #00c6ff);
-            color: #fff;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-        }
-        button:hover {
-            background: linear-gradient(135deg, #0056b3, #00aaff);
-            transform: scale(1.03);
-        }
-        button:active {
-            transform: scale(0.98);
+            font-family: 'Cairo', sans-serif;
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="main-container">
-        <h1>ج كونكور</h1>
-        <button onclick="window.location.href='bac-normal.html'">بكالوريا الدورة العادية</button>
-        <button onclick="window.location.href='bac-complementaire.html'">بكالوريا الدورة التكميلية</button>
-        <button onclick="window.location.href='bac-excellence.html'">نتائج الإمتياز</button>
-        <button onclick="window.location.href='bac-brief.html'">نتائج بريفة</button>
-        <button onclick="window.location.href='concours.html'">نتائج كونكور</button>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex justify-center items-center">
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md text-center space-y-4 transition-transform transform hover:-translate-y-1">
+        <h1 class="text-blue-700 dark:text-blue-300 text-2xl font-bold mb-4 shadow-sm">ج كونكور</h1>
+
+        <button onclick="window.location.href='bac-normal.html'"
+                class="block w-full p-3 bg-gray-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+            بكالوريا الدورة العادية
+        </button>
+
+        <button onclick="window.location.href='bac-complementaire.html'"
+                class="block w-full p-3 bg-gray-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+            بكالوريا الدورة التكميلية
+        </button>
+
+        <button onclick="window.location.href='bac-excellence.html'"
+                class="block w-full p-3 bg-gray-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+            نتائج الإمتياز
+        </button>
+
+        <button onclick="window.location.href='bac-brief.html'"
+                class="block w-full p-3 bg-gray-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+            نتائج بريفة
+        </button>
+
+        <button onclick="window.location.href='concours.html'"
+                class="block w-full p-3 bg-gray-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+            نتائج كونكور
+        </button>
     </div>
+
 </body>
 </html>
