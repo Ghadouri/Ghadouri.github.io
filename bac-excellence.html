@@ -38,6 +38,7 @@
             margin-bottom: 20px;
             font-weight: bold;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
         input, button {
             display: block;
@@ -47,10 +48,7 @@
             border-radius: 12px;
             border: 1px solid #ccc;
             font-size: 18px;
-            box-sizing: border-box; /* Ensure padding is included in width calculation */
-        }
-        input {
-            border: 1px solid #ccc;
+            box-sizing: border-box;
         }
         button {
             border: none;
@@ -76,7 +74,7 @@
         }
         .message {
             font-family: 'Traditional Arabic', serif;
-            font-size: 36px;
+            font-size: 28px;
             font-weight: bold;
             color: #28a745;
             text-align: center;
@@ -89,76 +87,101 @@
 </head>
 <body>
     <div class="main-container">
-        <div class="header">
-            نتائج الإمتياز
-        </div>
-        <input type="text" id="searchNumber" placeholder="أدخل الرقم">
+        <div class="header">نتائج الإمتياز</div>
+        <input type="text" id="searchNumber" placeholder="أدخل رقم الامتياز">
         <button onclick="searchResult()">بحث</button>
+
         <div class="result-container" id="resultContainer">
             <div><strong>الإسم:</strong> <span id="nameResult"></span></div>
             <div><strong>المعدل:</strong> <span id="averageResult"></span></div>
             <div><strong>القرار:</strong> <span id="decisionResult"></span></div>
-            <div id="noteArabe" style="display:none;"><strong>نتيجة العربية:</strong> <span></span></div>
-            <div id="noteFrancais" style="display:none;"><strong>نتيجة الفرنسية:</strong> <span></span></div>
-            <div id="noteCalcul" style="display:none;"><strong>نتيجة الحساب:</strong> <span></span></div>
-            <div id="notePhysique" style="display:none;"><strong>نتيجة الفيزياء:</strong> <span></span></div>
-            <div id="noteMaths" style="display:none;"><strong>نتيجة الرياضيات:</strong> <span></span></div>
+
+            <!-- مواد 1AS -->
+            <div id="noteArabe" style="display:none;"><strong>العربية:</strong> <span></span></div>
+            <div id="noteFrancais" style="display:none;"><strong>الفرنسية:</strong> <span></span></div>
+            <div id="noteCalcul" style="display:none;"><strong>الحساب:</strong> <span></span></div>
+
+            <!-- مواد 5C -->
+            <div id="notePhysique" style="display:none;"><strong>الفيزياء:</strong> <span></span></div>
+            <div id="noteMaths" style="display:none;"><strong>الرياضيات:</strong> <span></span></div>
+
             <div id="message" class="message"></div>
         </div>
     </div>
 
     <script>
-        function searchResult() {
-            const searchNumber = document.getElementById('searchNumber').value;
-            
-            fetch('https://ghadouri.github.io/S2.json')
-                .then(response => response.json())
-                .then(data => {
-                    const filteredResults = data.Feuil1.filter(item => item.NODOSS == searchNumber);
+        async function searchResult() {
+            const searchNumber = document.getElementById('searchNumber').value.trim();
+            if (!searchNumber) {
+                alert("⚠️ الرجاء إدخال رقم الامتياز");
+                return;
+            }
 
-                    if (filteredResults.length > 0) {
-                        const result = filteredResults[0]; // Display the first matching result
-                        document.getElementById('nameResult').textContent = result.Nom;
-                        document.getElementById('averageResult').textContent = result.Moyenne_generale;
-                        document.getElementById('decisionResult').textContent = result.Decision;
-                        
-                        function updateNote(id, value) {
-                            const noteElement = document.getElementById(id);
-                            if (value) {
-                                noteElement.querySelector('span').textContent = value;
-                                noteElement.style.display = 'block';
-                            } else {
-                                noteElement.style.display = 'none';
-                            }
-                        }
+            try {
+                // تحميل البيانات من كلا الملفين
+                const [data1AS, data5C] = await Promise.all([
+                    fetch('results_1AS.json').then(r => r.json()),
+                    fetch('results_5C.json').then(r => r.json())
+                ]);
 
-                        updateNote('noteArabe', result.Note_ARABE_1AS);
-                        updateNote('noteFrancais', result.Note_FRANCAIS_1AS);
-                        updateNote('noteCalcul', result.Note_CALCUL_1AS);
-                        updateNote('notePhysique', result.Note_PHYSIQUE_5C);
-                        updateNote('noteMaths', result.Note_MATHS_5C);
+                // البحث في 1AS
+                let result = data1AS.find(item => item.Num_Excellence_1AS == searchNumber);
+                let serie = "1AS";
 
-                        document.getElementById('resultContainer').style.display = 'block';
+                // إذا لم يوجد في 1AS، البحث في 5C
+                if (!result) {
+                    result = data5C.find(item => item.Num_Excellence_Bepc == searchNumber);
+                    serie = "5C";
+                }
 
-                        // Display congratulatory or encouraging message
-                        const messageElement = document.getElementById('message');
-                        if (result.Decision === 'Admis') {
-                            messageElement.textContent = 'مبروك';
-                            messageElement.classList.remove('failure');
-                        } else {
-                            messageElement.textContent = 'القادم أفضل';
-                            messageElement.classList.add('failure');
-                        }
-                        messageElement.style.display = 'block';
+                if (result) {
+                    document.getElementById('nameResult').textContent = result.Nom;
+                    document.getElementById('averageResult').textContent = result.Mgex;
+                    document.getElementById('decisionResult').textContent = result.Decision;
 
+                    // إخفاء كل المواد أولاً
+                    ['noteArabe','noteFrancais','noteCalcul','notePhysique','noteMaths']
+                        .forEach(id => document.getElementById(id).style.display = 'none');
+
+                    if (serie === "1AS") {
+                        updateNote('noteArabe', result.ARABE);
+                        updateNote('noteFrancais', result.FRANCAIS);
+                        updateNote('noteCalcul', result.CALCUL);
                     } else {
-                        alert('لم يتم العثور على نتائج.');
-                        document.getElementById('resultContainer').style.display = 'none';
+                        updateNote('notePhysique', result.PHYSIQUE);
+                        updateNote('noteMaths', result.MATHS);
                     }
-                })
-                .catch(error => {
-                    console.error('Error fetching JSON data:', error);
-                });
+
+                    document.getElementById('resultContainer').style.display = 'block';
+
+                    const messageElement = document.getElementById('message');
+                    if (result.Decision === 'Admis' || result.Decision === 'ناجح') {
+                        messageElement.textContent = '🎉 مبروك النجاح';
+                        messageElement.classList.remove('failure');
+                    } else {
+                        messageElement.textContent = 'القادم أفضل إن شاء الله';
+                        messageElement.classList.add('failure');
+                    }
+                    messageElement.style.display = 'block';
+
+                } else {
+                    alert('❌ لم يتم العثور على نتائج.');
+                    document.getElementById('resultContainer').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error fetching JSON data:', error);
+                alert('⚠️ خطأ في تحميل البيانات');
+            }
+        }
+
+        function updateNote(id, value) {
+            const noteElement = document.getElementById(id);
+            if (value !== null && value !== undefined) {
+                noteElement.querySelector('span').textContent = value;
+                noteElement.style.display = 'block';
+            } else {
+                noteElement.style.display = 'none';
+            }
         }
     </script>
 </body>
