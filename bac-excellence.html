@@ -118,6 +118,154 @@
             }
 
             try {
+                // تحميل ملف واحد فقط
+                const data = await fetch('results_ALL.json').then(r => r.json());
+
+                // البحث في جميع السجلات
+                let result = data.find(item =>
+                    item.Num_Excellence_1AS == searchNumber ||
+                    item.Num_Excellence_Bepc == searchNumber
+                );
+
+                if (result) {
+                    document.getElementById('nameResult').textContent = result.Nom;
+                    document.getElementById('averageResult').textContent = result.Mgex;
+                    document.getElementById('decisionResult').textContent = result.Decision;
+
+                    // إخفاء كل المواد أولاً
+                    ['noteArabe','noteFrancais','noteCalcul','notePhysique','noteMaths']
+                        .forEach(id => document.getElementById(id).style.display = 'none');
+
+                    // إذا كانت 1AS
+                    if (result.Num_Excellence_1AS) {
+                        updateNote('noteArabe', result.ARABE);
+                        updateNote('noteFrancais', result.FRANCAIS);
+                        updateNote('noteCalcul', result.CALCUL);
+                    } 
+                    // إذا كانت 5C
+                    else if (result.Num_Excellence_Bepc) {
+                        updateNote('notePhysique', result.PHYSIQUE);
+                        updateNote('noteMaths', result.MATHS);
+                    }
+
+                    document.getElementById('resultContainer').style.display = 'block';
+
+                    const messageElement = document.getElementById('message');
+                    if (result.Decision === 'Admis' || result.Decision === 'ناجح') {
+                        messageElement.textContent = '🎉 مبروك النجاح';
+                        messageElement.classList.remove('failure');
+                    } else {
+                        messageElement.textContent = 'القادم أفضل إن شاء الله';
+                        messageElement.classList.add('failure');
+                    }
+                    messageElement.style.display = 'block';
+
+                } else {
+                    alert('❌ لم يتم العثور على نتائج.');
+                    document.getElementById('resultContainer').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error fetching JSON data:', error);
+                alert('⚠️ خطأ في تحميل البيانات');
+            }
+        }
+
+        function updateNote(id, value) {
+            const noteElement = document.getElementById(id);
+            if (value !== null && value !== undefined && value !== "") {
+                noteElement.querySelector('span').textContent = value;
+                noteElement.style.display = 'block';
+            } else {
+                noteElement.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
+            color: #0056b3;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input, button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            font-size: 18px;
+            box-sizing: border-box;
+        }
+        button {
+            border: none;
+            background: linear-gradient(135deg, #007bff, #00c6ff);
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #0056b3, #00aaff);
+            transform: scale(1.03);
+        }
+        button:active {
+            background: linear-gradient(135deg, #0056b3, #0099ff);
+            transform: scale(0.98);
+        }
+        .result-container {
+            margin-top: 20px;
+            display: none;
+        }
+        .result-container div {
+            margin: 10px 0;
+        }
+        .message {
+            font-family: 'Traditional Arabic', serif;
+            font-size: 28px;
+            font-weight: bold;
+            color: #28a745;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .message.failure {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">نتائج الإمتياز</div>
+        <input type="text" id="searchNumber" placeholder="أدخل رقم الامتياز">
+        <button onclick="searchResult()">بحث</button>
+
+        <div class="result-container" id="resultContainer">
+            <div><strong>الإسم:</strong> <span id="nameResult"></span></div>
+            <div><strong>المعدل:</strong> <span id="averageResult"></span></div>
+            <div><strong>القرار:</strong> <span id="decisionResult"></span></div>
+
+            <!-- مواد 1AS -->
+            <div id="noteArabe" style="display:none;"><strong>العربية:</strong> <span></span></div>
+            <div id="noteFrancais" style="display:none;"><strong>الفرنسية:</strong> <span></span></div>
+            <div id="noteCalcul" style="display:none;"><strong>الحساب:</strong> <span></span></div>
+
+            <!-- مواد 5C -->
+            <div id="notePhysique" style="display:none;"><strong>الفيزياء:</strong> <span></span></div>
+            <div id="noteMaths" style="display:none;"><strong>الرياضيات:</strong> <span></span></div>
+
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        async function searchResult() {
+            const searchNumber = document.getElementById('searchNumber').value.trim();
+            if (!searchNumber) {
+                alert("⚠️ الرجاء إدخال رقم الامتياز");
+                return;
+            }
+
+            try {
                 // تحميل البيانات من كلا الملفين
                 const [data1AS, data5C] = await Promise.all([
                     fetch('results_1AS.json').then(r => r.json()),
